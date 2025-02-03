@@ -103,7 +103,7 @@ services:
 
       GRAPHQL_ENABLED: "true"
       ADMIN_EMAIL: "admin@dwm3.net"
-      ADMIN_PASSWORD: "PASSWORD_TO_MODIFY"
+      ADMIN_PASSWORD: "admin"
 
       # Make sure to set this in production
       # (see https://docs.directus.io/self-hosted/config-options#general)
