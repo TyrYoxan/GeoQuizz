@@ -18,6 +18,14 @@ services:
       - ./env/api.env
     working_dir: /var/php
     command: php -S 0.0.0.0:80 -t /var/php/public
+  
+  auth.db:
+    image: 'postgres:latest'
+    env_file: ./authdb.env
+    ports:
+      - '40006:5432'
+    volumes:
+      - ./app-auth/sql:/var/sql'
 
   ################################
   #          GEOQUIZZ            #
@@ -131,13 +139,7 @@ services:
   #               DB             #
   ################################
 
-  auth.db:
-    image: 'postgres:latest'
-    env_file: ./authdb.env
-    ports:
-      - '40004:5432'
-    volumes:
-      - ./app-auth/sql:/var/sql'
+
 
   adminer:
     image: adminer
