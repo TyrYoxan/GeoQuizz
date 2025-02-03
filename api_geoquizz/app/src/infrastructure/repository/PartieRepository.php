@@ -2,6 +2,7 @@
 
 namespace api_geoquizz\infrastructure\repository;
 
+use api_geoquizz\core\dto\InputPartieDTO;
 use api_geoquizz\core\repositoryInterfaces\RepositoryPartieInterface;
 use api_geoquizz\core\domain\entities\partie\Partie;
 use PDO;
@@ -30,9 +31,13 @@ class PartieRepository implements RepositoryPartieInterface
         return new Partie($row['sequence_photo'], $row['score']);
     }
 
-    public function createPartie($partie)
+    public function createPartie(InputPartieDTO $partie): void
     {
-        // TODO: Implement createPartie() method.
+        $rq = $this->db->prepare("INSERT INTO parties
+                             (sequence_photo, score) VALUES (:sequence_photo, :score)");
+        $rq->bindValue(':sequence_photo', $partie->sequence_photo, PDO::PARAM_STR);
+        $rq->bindValue(':score', $partie->score, PDO::PARAM_INT);
+        $rq->execute();
     }
 
     public function updatePartie($partie)

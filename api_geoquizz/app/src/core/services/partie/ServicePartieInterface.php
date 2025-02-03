@@ -3,11 +3,12 @@
 namespace api_geoquizz\core\services\partie;
 
 use api_geoquizz\core\dto\DTOPartie;
+use api_geoquizz\core\dto\InputPartieDTO;
 
 interface ServicePartieInterface
 {
-    public function createPartie(DTOPartie $partie);
-    public function updatePartie(DTOPartie $partie);
+    public function createPartie(InputPartieDTO $partie): void;
+    public function updatePartie(DTOPartie $partie): void;
 
     public function getPartie($id);
 }
