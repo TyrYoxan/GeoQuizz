@@ -13,9 +13,9 @@ services:
     ports:
       - '40002:80'
     volumes:
-      - ./api_auth/app/:/var/php/
-#    env_file:
-#      - ./env/api.env
+      - ./api_auth/:/var/php/
+    env_file:
+      - ./env/api.env
     working_dir: /var/php
     command: php -S 0.0.0.0:80 -t /var/php/public
 
@@ -51,7 +51,7 @@ services:
     ports:
       - '40000:80'
     volumes:
-      - ./gateway/app/:/var/php/
+      - ./gateway/:/var/php/
     working_dir: /var/php
     command: php -S 0.0.0.0:80 -t /var/php/public
 
@@ -126,6 +126,18 @@ services:
     # Environment variables can also be defined in a file (for example `.env`):
     # env_file:
     #	  - .env
+
+  ################################
+  #               DB             #
+  ################################
+
+  auth.db:
+    image: 'postgres:latest'
+    env_file: ./authdb.env
+    ports:
+      - '40004:5432'
+    volumes:
+      - ./app-auth/sql:/var/sql'
 
   adminer:
     image: adminer
