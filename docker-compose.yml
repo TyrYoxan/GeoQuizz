@@ -10,8 +10,8 @@ services:
       - '40002:80'
     volumes:
       - ./api_auth/app/:/var/php/
-    env_file:
-      - ./env/api.env
+#    env_file:
+#      - ./env/api.env
     working_dir: /var/php
     command: php -S 0.0.0.0:80 -t /var/php/public
 
@@ -116,4 +116,4 @@ services:
   adminer:
     image: adminer
     ports:
-      - '8888:8080'
+    - '40004:8080'
