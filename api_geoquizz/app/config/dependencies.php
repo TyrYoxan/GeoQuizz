@@ -1,27 +1,15 @@
 <?php
 
+use api_geoquizz\application\actions\GetPartieAction;
+use api_geoquizz\core\services\partie\ServicePartie;
+use api_geoquizz\core\services\partie\ServicePartieInterface;
+use api_geoquizz\infrastructure\repository\PartieRepository;
 use Psr\Container\ContainerInterface;
 
-
-
-
 return [
-    'log.rdv.name' => 'toubeelib.log',
-    'log.rdv.file' => __DIR__ . '/logs/toubeelib.rdv.log',
-    'log.rdv.level' => \Monolog\Level::Debug,
 
-    'logger.rdv' => function(ContainerInterface $c) {
-        $logger = new \Monolog\Logger($c->get('log.rdv.name'));
-        $logger->pushHandler(new \Monolog\Handler\StreamHandler(
-                $c->get('log.rdv.file'),
-                $c->get('log.rdv.level'))
-        );
-
-        return $logger;
-    },
-
-    'rdv.pdo' => function(ContainerInterface $c) {
-        $pdo = new PDO('pgsql:host=db.toubeelib;dbname=rdv', 'root', 'root');
+    'partie.pdo' => function(ContainerInterface $c) {
+        $pdo = new PDO('pgsql:host=db_geoquizz;dbname=geoquizz', 'geoquizz', 'geoquizz');
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $pdo;
     },
@@ -36,13 +24,25 @@ return [
         ]);
     },
 
-    'rdv_message_broker' => function(ContainerInterface $c){
-        return new \PhpAmqpLib\Connection\AMQPStreamConnection(
-            getenv('AMQP_HOST'),
-            getenv('AMQP_PORT'),
-            getenv('AMQP_USER'),
-            getenv('AMQP_PASSWORD')
-        );
+//    'rdv_message_broker' => function(ContainerInterface $c){
+//        return new \PhpAmqpLib\Connection\AMQPStreamConnection(
+//            getenv('AMQP_HOST'),
+//            getenv('AMQP_PORT'),
+//            getenv('AMQP_USER'),
+//            getenv('AMQP_PASSWORD')
+//        );
+//    },
+
+    'PartieRepository' => function(ContainerInterface $c){
+        return new PartieRepository($c->get('partie.pdo'));
     },
 
+    // Enregistrement de l'interface ServicePartieInterface
+    ServicePartieInterface::class => function(ContainerInterface $c) {
+        return new ServicePartie($c->get('PartieRepository'));
+    },
+
+    'GetPartie' => function(ContainerInterface $c) {
+        return new GetPartieAction($c->get(ServicePartieInterface::class));
+    }
 ];
