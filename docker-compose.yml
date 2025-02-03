@@ -1,3 +1,7 @@
+volumes:
+  db_geoquizz:
+    driver: local
+
 services:
   ################################
   #              AUTH            #
@@ -9,11 +13,19 @@ services:
     ports:
       - '40002:80'
     volumes:
-      - ./api_auth/app/:/var/php/
+      - ./api_auth/:/var/php/
     env_file:
       - ./env/api.env
     working_dir: /var/php
     command: php -S 0.0.0.0:80 -t /var/php/public
+  
+  auth.db:
+    image: 'postgres:latest'
+    env_file: ./authdb.env
+    ports:
+      - '40006:5432'
+    volumes:
+      - ./app-auth/sql:/var/sql'
 
   ################################
   #          GEOQUIZZ            #
@@ -24,9 +36,19 @@ services:
       dockerfile: 8.3-cli.Dockerfile
     ports:
       - '40001:80'
+    working_dir: /var/php
     volumes:
       - ./api_geoquizz/app/:/var/php/
+    command: php -S 0.0.0.0:80 -t /var/php/public
 
+  db_geoquizz:
+    image: 'postgres:latest'
+    env_file: ./env/db.env
+    ports:
+      - '40005:5432'
+    volumes:
+      - ./api_geoquizz/sql/init-postgres:/docker-entrypoint-initdb.d
+      - db_geoquizz:/var/lib/postgresql/data
   ################################
   #           GATEWAY            #
   ################################
@@ -37,7 +59,7 @@ services:
     ports:
       - '40000:80'
     volumes:
-      - ./gateway/app/:/var/php/
+      - ./gateway/:/var/php/
     working_dir: /var/php
     command: php -S 0.0.0.0:80 -t /var/php/public
 
@@ -50,7 +72,7 @@ services:
     # Required when running on platform other than amd64, like Apple M1/M2:
     #platform: linux/amd64
     volumes:
-      - ./data/database:/var/lib/postgresql/data
+      - ./directus/data/database:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: "directus"
       POSTGRES_PASSWORD: "directus"
@@ -78,8 +100,8 @@ services:
     ports:
       - '40003:8055'
     volumes:
-      - ./uploads:/directus/uploads
-      - ./extensions:/directus/extensions
+      - ./directus/uploads:/directus/uploads
+      - ./directus/extensions:/directus/extensions
     depends_on:
       database:
         condition: service_healthy
@@ -113,7 +135,13 @@ services:
     # env_file:
     #	  - .env
 
+  ################################
+  #               DB             #
+  ################################
+
+
+
   adminer:
     image: adminer
     ports:
-      - '8888:8080'
+    - '40004:8080'
