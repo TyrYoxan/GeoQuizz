@@ -50,7 +50,7 @@ services:
     # Required when running on platform other than amd64, like Apple M1/M2:
     #platform: linux/amd64
     volumes:
-      - ./data/database:/var/lib/postgresql/data
+      - ./directus/data/database:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: "directus"
       POSTGRES_PASSWORD: "directus"
@@ -78,8 +78,8 @@ services:
     ports:
       - '40003:8055'
     volumes:
-      - ./uploads:/directus/uploads
-      - ./extensions:/directus/extensions
+      - ./directus/uploads:/directus/uploads
+      - ./directus/extensions:/directus/extensions
     depends_on:
       database:
         condition: service_healthy
