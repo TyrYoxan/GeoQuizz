@@ -61,7 +61,7 @@ services:
     ports:
       - '40000:80'
     volumes:
-      - ./gateway/:/var/php/
+      - ./gateway/app/:/var/php/
     working_dir: /var/php
     command: php -S 0.0.0.0:80 -t /var/php/public
 
