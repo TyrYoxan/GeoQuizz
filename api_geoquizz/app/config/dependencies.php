@@ -56,6 +56,6 @@ return [
     },
 
     'GetProfil' => function(ContainerInterface $c) {
-        return new GetProfilAction($c->get(ServicePartieInterface::class));
+        return new GetProfilAction($c->get(JWTManager::class), $c->get(ServicePartieInterface::class));
     }
 ];

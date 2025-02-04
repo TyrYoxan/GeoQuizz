@@ -31,4 +31,9 @@ class ServicePartie implements ServicePartieInterface
     {
         // TODO: Implement updatePartie() method.
     }
+
+    public function getUserParties(string $id): array
+    {
+        return $this->repositoryPartie->getUserParties($id);
+    }
 }

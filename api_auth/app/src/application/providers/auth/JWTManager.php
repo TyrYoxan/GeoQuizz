@@ -44,6 +44,7 @@ class JWTManager{
 			'exp'=>time()+$this->tempsValidite,
 			'sub' => $user->id,
 			'data' => [
+                'id' => $user->id,
                 'email' => $user->email,
                 'pseudo' => $user->pseudo ?? null,
                 'role' => $user->role,

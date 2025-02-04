@@ -44,4 +44,14 @@ class PartieRepository implements RepositoryPartieInterface
     {
         // TODO: Implement updatePartie() method.
     }
+
+    public function getUserParties(string $id): array
+    {
+        $rq = $this->db->prepare("SELECT id_partie, score 
+                                    FROM parties
+                                    WHERE id_user = :id");
+        $rq->bindValue(':id', $id, PDO::PARAM_STR);
+        $rq->execute();
+        return $rq->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
