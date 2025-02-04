@@ -79,6 +79,7 @@ p{
 
 .btn{
   color: white;
+  font-size: 2em;
 }
 
 ul{
@@ -89,6 +90,22 @@ ul{
   display: flex;
   flex-direction: row;
   justify-content: center;
+}
+
+.best h2{
+  padding: 0.3em;
+  border: 3px solid black;
+  color: #1459b0;
+}
+
+.container h1{
+  border: 3px solid black;
+  color: #1459b0;
+  border-radius: 20px;
+}
+
+.container h2{
+  border-bottom: 2px solid black;
 }
 
 .score{
@@ -151,7 +168,7 @@ ul{
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 50em;
+  height: 47em;
   margin: 0;
 }
 
