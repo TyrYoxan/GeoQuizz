@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use api_geoquizz\application\actions\CreatePartieAction;
 use api_geoquizz\application\actions\GetPartieAction;
+use api_geoquizz\application\actions\GetProfilAction;
 use api_geoquizz\application\actions\HomeAction;
 
 return function(\Slim\App $app): \Slim\App {
@@ -14,6 +15,7 @@ return function(\Slim\App $app): \Slim\App {
     $app->get('/parties/{id}', GetPartieAction::class)->setName('partie');
     $app->post('/parties/create', CreatePartieAction::class)->setName('create');
 
+    $app->get('/profil', GetProfilAction::class)->setName('profil');
 
     return $app;
 };
