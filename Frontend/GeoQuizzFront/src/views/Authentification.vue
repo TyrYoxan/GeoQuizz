@@ -1,35 +1,154 @@
 <script setup>
 import { ref } from 'vue'
+import axios from 'axios'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 const connexion = ref(false)
+const email = ref('')
+const password = ref('')
+const passwordConfirm = ref('')
+const isLoading = ref(false)
+
+// Fonction pour se connecter
+const signin = async () => {
+  isLoading.value = true
+  try {
+    const response = await axios.post('http://localhost:40000/signin', {
+      email: email.value,
+      password: password.value,
+    })
+
+    // Sauvegarde du token dans localStorage
+    const accessToken = response.headers.access_token
+    localStorage.setItem('authToken', accessToken)
+
+    alert('Connexion réussie !')
+    router.push('/home')
+  } catch (error) {
+    alert('Erreur lors de la connexion : ' + (error.response?.data?.message || error.message))
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// Fonction pour s'inscrire
+const signup = async () => {
+  if (password.value !== passwordConfirm.value) {
+    alert('Les mots de passe ne correspondent pas !')
+    return
+  }
+
+  isLoading.value = true
+  try {
+    await axios.post('http://localhost:40000/signup', {
+      email: email.value,
+      password: password.value,
+    })
+    alert('Inscription réussie ! Vous pouvez maintenant vous connecter.')
+    connexion.value = false
+  } catch (error) {
+    alert('Erreur lors de l’inscription : ' + (error.response?.data?.message || error.message))
+  } finally {
+    isLoading.value = false
+  }
+}
+
 </script>
 
 <template>
   <div class="wrapper fadeInDown">
     <div id="formContent">
+      <!-- Spinner -->
+      <div v-if="isLoading" class="spinner-container">
+        <div class="spinner"></div>
+      </div>
+
       <!-- Tabs Titles -->
       <h2 class="active underlineHover" @click="connexion = false">Sign In</h2>
       <h2 class="active underlineHover" @click="connexion = true">Sign Up</h2>
 
       <!-- Login Form -->
-      <form v-if="!connexion">
-        <input type="text" id="login" class="fadeIn second" name="login" placeholder="email">
-        <input type="text" id="password" class="fadeIn third" name="login" placeholder="password">
-        <input type="submit" class="fadeIn fourth" value="Log In">
+      <form v-if="!connexion && !isLoading" @submit.prevent="signin">
+        <input
+          type="text"
+          id="login"
+          class="fadeIn second"
+          v-model="email"
+          placeholder="email"
+        />
+        <input
+          type="password"
+          id="password"
+          class="fadeIn third"
+          v-model="password"
+          placeholder="password"
+        />
+        <input type="submit" class="fadeIn fourth" value="Log In" />
       </form>
 
       <!-- Sign Up Form -->
-      <form v-if="connexion">
-        <input type="text" id="signup-email" class="fadeIn second" name="signup-email" placeholder="email">
-        <input type="text" id="signup-password" class="fadeIn third" name="signup-password" placeholder="password">
-        <input type="text" id="signup-password-confirm" class="fadeIn third" name="signup-password-confirm" placeholder="confirm password">
-        <input type="submit" class="fadeIn fourth" value="Sign Up">
+      <form v-if="connexion && !isLoading" @submit.prevent="signup">
+        <input
+          type="text"
+          id="signup-email"
+          class="fadeIn second"
+          v-model="email"
+          placeholder="email"
+        />
+        <input
+          type="password"
+          id="signup-password"
+          class="fadeIn third"
+          v-model="password"
+          placeholder="password"
+        />
+        <input
+          type="password"
+          id="signup-password-confirm"
+          class="fadeIn third"
+          v-model="passwordConfirm"
+          placeholder="confirm password"
+        />
+        <input type="submit" class="fadeIn fourth" value="Sign Up" />
       </form>
     </div>
   </div>
 </template>
 
+
+
+
 <style scoped>
-/* BASIC */
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 10;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #000;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 html {
   background-color: #56baed;
 }
