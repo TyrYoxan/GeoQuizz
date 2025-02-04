@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS "parties";
 CREATE TABLE IF NOT EXISTS parties(
     id_partie CHAR(36) PRIMARY KEY DEFAULT (gen_random_uuid ()),
     sequence_photo CHAR(36) NOT NULL,

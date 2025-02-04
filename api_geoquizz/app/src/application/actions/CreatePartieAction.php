@@ -22,7 +22,8 @@ class CreatePartieAction extends AbstractAction
     public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args): ResponseInterface
     {
         $body = $rq->getParsedBody();
-        var_dump($body);
+        $token = $rq->getHeader('Authorization')[0];
+        //$info = json_decode();
         $partieInputValidator = Validator::key('sequence_photo', Validator::stringType()->notEmpty())
         ->key('score', Validator::intVal()->notEmpty());
         try{

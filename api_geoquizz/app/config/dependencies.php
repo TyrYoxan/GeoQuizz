@@ -1,6 +1,9 @@
 <?php
 
+use api_geoquizz\application\actions\CreatePartieAction;
 use api_geoquizz\application\actions\GetPartieAction;
+use api_geoquizz\application\actions\GetProfilAction;
+use api_geoquizz\application\providers\JWTManager;
 use api_geoquizz\core\services\partie\ServicePartie;
 use api_geoquizz\core\services\partie\ServicePartieInterface;
 use api_geoquizz\infrastructure\repository\PartieRepository;
@@ -33,6 +36,8 @@ return [
 //        );
 //    },
 
+    JWTManager::class=> DI\autowire(JWTManager::class),
+
     'PartieRepository' => function(ContainerInterface $c){
         return new PartieRepository($c->get('partie.pdo'));
     },
@@ -44,5 +49,13 @@ return [
 
     'GetPartie' => function(ContainerInterface $c) {
         return new GetPartieAction($c->get(ServicePartieInterface::class));
+    },
+
+    'CreatePartie' => function(ContainerInterface $c) {
+        return new CreatePartieAction($c->get(ServicePartieInterface::class));
+    },
+
+    'GetProfil' => function(ContainerInterface $c) {
+        return new GetProfilAction($c->get(ServicePartieInterface::class));
     }
 ];
