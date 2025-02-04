@@ -2,18 +2,37 @@
 namespace gateway\middlewares;
 
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
+use Slim\Psr7\Factory\ResponseFactory;
 
-class CorsMiddleware implements MiddlewareInterface{
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
-    {
-		$response = $handler->handle($request);
-		return $response
-			->withHeader('Access-Control-Allow-Origin', '*')
-			->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-			->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-	}
+class CorsMiddleware{
+    public function __invoke(Request $rq, RequestHandler $next): Response {
+        $origin = $rq->getHeader('Origin');
+        $origin = !empty($origin) ? $origin[0] : '*';
+
+        if ($rq->getMethod() === 'OPTIONS') {
+            $responseFactory = new ResponseFactory();
+            $response = $responseFactory->createResponse(204);
+            return $response
+                ->withHeader('Access-Control-Allow-Origin', $origin)
+                ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+                ->withHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type, X-Requested-With')
+                ->withHeader('Access-Control-Max-Age', '3600')
+                ->withHeader('Access-Control-Allow-Credentials', 'true');
+        }
+
+        $response = $next->handle($rq);
+
+        return $response
+            ->withHeader('Access-Control-Allow-Origin', $origin)
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+            ->withHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type, X-Requested-With')
+            ->withHeader('Access-Control-Allow-Credentials', 'true');
+    }
 
 }
