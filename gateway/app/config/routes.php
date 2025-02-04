@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 use gateway\application\actions\GenericAuthAction;
 use gateway\application\actions\GenericGeoquizzAction;
+use gateway\middlewares\CorsMiddleware;
 use Slim\Exception\HttpNotFoundException;
 use gateway\application\actions\HomeAction;
 
 return function (\Slim\App $app): \Slim\App {
-
+    $app->add(CorsMiddleware::class);
     $app->get('/', HomeAction::class);
 
     $app->get('/tokens/validate', GenericAuthAction::class);
