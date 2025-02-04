@@ -26,7 +26,7 @@ const signin = async () => {
     alert('Connexion réussie !')
     router.push('/home')
   } catch (error) {
-    alert('Erreur lors de la connexion : ' + (error.response?.data?.message || error.message))
+    alert('Erreur lors de la connexion : mot de passe ou email incorrect')
   } finally {
     isLoading.value = false
   }
@@ -48,7 +48,7 @@ const signup = async () => {
     alert('Inscription réussie ! Vous pouvez maintenant vous connecter.')
     connexion.value = false
   } catch (error) {
-    alert('Erreur lors de l’inscription : ' + (error.response?.data?.message || error.message))
+    alert('Erreur lors de l’inscription : utilisateur déjà existant')
   } finally {
     isLoading.value = false
   }
@@ -231,7 +231,7 @@ input[type=button], input[type=submit], input[type=reset]  {
 
 
 
-input[type=text] {
+input {
   background-color: #f6f6f6;
   color: #0d0d0d;
   padding: 15px 32px;
@@ -245,12 +245,12 @@ input[type=text] {
   border-radius: 5px 5px 5px 5px;
 }
 
-input[type=text]:focus {
+input:focus {
   background-color: #fff;
   border-bottom: 2px solid #5fbae9;
 }
 
-input[type=text]::placeholder {
+input::placeholder {
   color: #cccccc;
 }
 
