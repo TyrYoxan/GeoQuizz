@@ -1,6 +1,8 @@
 volumes:
   db_geoquizz:
     driver: local
+  db_auth:
+    driver: local
 
 services:
   ################################
@@ -11,22 +13,22 @@ services:
       context: build
       dockerfile: 8.3-cli.Dockerfile
     ports:
-      - '40002:80'
+      - '40003:80'
     volumes:
-      - ./api_auth/:/var/php/
+      - ./api_auth/app/:/var/php/
     env_file:
       - ./env/api.env
     working_dir: /var/php
     command: php -S 0.0.0.0:80 -t /var/php/public
-  
+
   auth.db:
     image: 'postgres:latest'
     env_file: ./authdb.env
     ports:
-      - '40006:5432'
+      - '40004:5432'
     volumes:
-      - ./app-auth/sql:/var/sql'
-
+      - ./api_auth/sql/init-postgres:/docker-entrypoint-initdb.d
+      - db_auth:/var/lib/postgresql/data
   ################################
   #          GEOQUIZZ            #
   ################################
@@ -45,7 +47,7 @@ services:
     image: 'postgres:latest'
     env_file: ./env/db.env
     ports:
-      - '40005:5432'
+      - '40002:5432'
     volumes:
       - ./api_geoquizz/sql/init-postgres:/docker-entrypoint-initdb.d
       - db_geoquizz:/var/lib/postgresql/data
@@ -98,7 +100,7 @@ services:
   directus:
     image: directus/directus:11.1.1
     ports:
-      - '40003:8055'
+      - '40009:8055'
     volumes:
       - ./directus/uploads:/directus/uploads
       - ./directus/extensions:/directus/extensions
@@ -135,13 +137,7 @@ services:
     # env_file:
     #	  - .env
 
-  ################################
-  #               DB             #
-  ################################
-
-
-
   adminer:
     image: adminer
     ports:
-    - '40004:8080'
+    - '40010:8080'
