@@ -32,7 +32,6 @@ class JWTAuthnProvider implements AuthnProviderInterface{
 		$authdto = new AuthDTO($user->id,$user->role, $user->email);
 		$authdto->setAtoken($token);
 		return $authdto;
-
 	}
 
     public function validateToken(string $atoken): bool{
@@ -51,9 +50,9 @@ class JWTAuthnProvider implements AuthnProviderInterface{
 	public function getSignedInUser(string $atoken): AuthDTO
 	{
 		try{
-		$token = $this->jwtManager->decodeToken($atoken);
-		$authDto = new AuthDTO($token['data']['sub'], $token['data']['role'], $token['data']['email'], $token['data']['pseudo']);
-		return $authDto;
+            $token = $this->jwtManager->decodeToken($atoken);
+            $authDto = new AuthDTO($token['data']['sub'], $token['data']['role'], $token['data']['email'], $token['data']['pseudo']);
+            return $authDto;
 		}
 		catch(\Exception $e){
 			throw new AuthInvalidException($e->getMessage());

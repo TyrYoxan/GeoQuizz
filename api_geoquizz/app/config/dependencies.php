@@ -49,10 +49,13 @@ return [
     },
 
     CreatePartieAction::class=> function(ContainerInterface $c) {
-        return new CreatePartieAction($c->get(ServicePartieInterface::class), $c->get('client.directus'));
+        return new CreatePartieAction($c->get(ServicePartieInterface::class),
+                                      $c->get('client.directus'),
+                                      $c->get(JWTManager::class));
     },
 
     'GetProfil' => function(ContainerInterface $c) {
-        return new GetProfilAction($c->get(JWTManager::class), $c->get(ServicePartieInterface::class));
+        return new GetProfilAction($c->get(JWTManager::class),
+                                   $c->get(ServicePartieInterface::class));
     }
 ];

@@ -31,11 +31,12 @@ class PartieRepository implements RepositoryPartieInterface
         return new Partie($row['sequence_photo'], $row['score']);
     }
 
-    public function createPartie(InputPartieDTO $partie): void
+    public function createPartie(InputPartieDTO $partie, String $id_user=null): void
     {
         $rq = $this->db->prepare("INSERT INTO parties
-                             (sequence_photo, score) VALUES (:sequence_photo, :score)");
+                             (sequence_photo, id_user, score) VALUES (:sequence_photo,:id_user, :score)");
         $rq->bindValue(':sequence_photo', $partie->sequence_photo, PDO::PARAM_STR);
+        $rq->bindValue(':id_user', $id_user, PDO::PARAM_STR);
         $rq->bindValue(':score', $partie->score, PDO::PARAM_INT);
         $rq->execute();
     }

@@ -30,13 +30,6 @@ class JWTManager{
 	}
 
 	public function createAcessToken(AuthDTO $user): string{
-		/*
-		* Données nécessaires pour créer le token:
-		* temps de validité à partir de maintenant
-		* emmetteur du token
-		* audience du token 
-		* sujet du token (id de l'user)
-		*/
 		$payload = [ 
 			'iss'=> $this->emmeteur,
 			'aud'=>$this->audience,
@@ -52,10 +45,18 @@ class JWTManager{
         ] ;
 
 		return JWT::encode($payload, $this->key, $this->algo);
-
-
 	}
 	public function createRefresh(array $paylod): string{
+        $payload = [
+            'iss'=> $this->emmeteur,
+            'aud'=>$this->audience,
+            'iat'=>time(),
+            'exp'=>time()+$this->tempsValidite,
+            'data' => [
+                'user' => $paylod['data']['user']
+            ]
+        ];
+        return JWT::encode($payload, $this->key, $this->algo);
 	}
 
 	public function decodeToken(string $token): array{
