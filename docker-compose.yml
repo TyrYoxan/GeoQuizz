@@ -6,6 +6,10 @@ volumes:
   db_directus:
     driver: local
 
+networks:
+  geoquizz:
+    driver: bridge
+
 services:
   ################################
   #              AUTH            #
@@ -21,6 +25,8 @@ services:
     env_file:
       - ./env/api.env
     working_dir: /var/php
+    networks:
+      - geoquizz
     command: php -S 0.0.0.0:80 -t /var/php/public
 
   auth.db:
@@ -31,6 +37,9 @@ services:
     volumes:
       - ./api_auth/sql/init-postgres:/docker-entrypoint-initdb.d
       - db_auth:/var/lib/postgresql/data
+    networks:
+      - geoquizz
+
   ################################
   #          GEOQUIZZ            #
   ################################
@@ -43,6 +52,8 @@ services:
     working_dir: /var/php
     volumes:
       - ./api_geoquizz/app/:/var/php/
+    networks:
+      - geoquizz
     command: php -S 0.0.0.0:80 -t /var/php/public
 
   db_geoquizz:
@@ -53,6 +64,9 @@ services:
     volumes:
       - ./api_geoquizz/sql/init-postgres:/docker-entrypoint-initdb.d
       - db_geoquizz:/var/lib/postgresql/data
+    networks:
+      - geoquizz
+
   ################################
   #           GATEWAY            #
   ################################
@@ -65,6 +79,8 @@ services:
     volumes:
       - ./gateway/app/:/var/php/
     working_dir: /var/php
+    networks:
+      - geoquizz
     command: php -S 0.0.0.0:80 -t /var/php/public
 
   ################################
@@ -89,6 +105,8 @@ services:
       retries: 5
       start_interval: 5s
       start_period: 30s
+    networks:
+      - geoquizz
 
   cache:
     image: redis:6
@@ -99,7 +117,8 @@ services:
       retries: 5
       start_interval: 5s
       start_period: 30s
-
+    networks:
+      - geoquizz
   directus:
     image: directus/directus:11.1.1
     ports:
@@ -131,6 +150,8 @@ services:
       GRAPHQL_ENABLED: "true"
       ADMIN_EMAIL: "admin@dwm3.net"
       ADMIN_PASSWORD: "admin"
+    networks:
+      - geoquizz
 
       # Make sure to set this in production
       # (see https://docs.directus.io/self-hosted/config-options#general)
@@ -144,3 +165,5 @@ services:
     image: adminer
     ports:
     - '40010:8080'
+    networks:
+      - geoquizz

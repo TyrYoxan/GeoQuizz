@@ -48,7 +48,7 @@ return [
         return new GetPartieAction($c->get(ServicePartieInterface::class));
     },
 
-    'CreatePartie' => function(ContainerInterface $c) {
+    CreatePartieAction::class=> function(ContainerInterface $c) {
         return new CreatePartieAction($c->get(ServicePartieInterface::class), $c->get('client.directus'));
     },
 
