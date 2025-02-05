@@ -61,6 +61,6 @@ return [
     },
 
     UpdatePArtieAction::class=> function(ContainerInterface $c) {
-        return new UpdatePartieAction($c->get(ServicePartieInterface::class));
+        return new UpdatePartieAction($c->get(ServicePartieInterface::class), $c->get(JWTManager::class));
     }
 ];
