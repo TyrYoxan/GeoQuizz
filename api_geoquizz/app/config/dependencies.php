@@ -3,6 +3,7 @@
 use api_geoquizz\application\actions\CreatePartieAction;
 use api_geoquizz\application\actions\GetPartieAction;
 use api_geoquizz\application\actions\GetProfilAction;
+use api_geoquizz\application\actions\UpdatePartieAction;
 use api_geoquizz\application\providers\JWTManager;
 use api_geoquizz\core\services\partie\ServicePartie;
 use api_geoquizz\core\services\partie\ServicePartieInterface;
@@ -44,7 +45,7 @@ return [
         return new ServicePartie($c->get('PartieRepository'));
     },
 
-    'GetPartie' => function(ContainerInterface $c) {
+    GetPartieAction::class => function(ContainerInterface $c) {
         return new GetPartieAction($c->get(ServicePartieInterface::class));
     },
 
@@ -54,8 +55,12 @@ return [
                                       $c->get(JWTManager::class));
     },
 
-    'GetProfil' => function(ContainerInterface $c) {
+    GetProfilAction::class => function(ContainerInterface $c) {
         return new GetProfilAction($c->get(JWTManager::class),
                                    $c->get(ServicePartieInterface::class));
+    },
+
+    UpdatePArtieAction::class=> function(ContainerInterface $c) {
+        return new UpdatePartieAction($c->get(ServicePartieInterface::class));
     }
 ];

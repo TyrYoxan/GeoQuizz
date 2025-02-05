@@ -41,9 +41,12 @@ class PartieRepository implements RepositoryPartieInterface
         $rq->execute();
     }
 
-    public function updatePartie($partie)
+    public function updatePartie($partie): void
     {
-        // TODO: Implement updatePartie() method.
+        $rq = $this->db->prepare("UPDATE parties SET score=:score WHERE sequence_photo=:sequence");
+        $rq->bindValue(':score', $partie->score, PDO::PARAM_INT);
+        $rq->bindValue(':sequence', $partie->sequence_photo, PDO::PARAM_STR);
+        $rq->execute();
     }
 
     public function getUserParties(string $id): array

@@ -6,8 +6,8 @@ use api_geoquizz\core\domain\entities\partie\Partie;
 
 class DTOPartie extends DTO implements \JsonSerializable
 {
-    private String $sequence_photo;
-    private int $score;
+    protected String $sequence_photo;
+    protected int $score;
     public function __construct(Partie $partie)
     {
         $this->sequence_photo = $partie->sequence_photo;
