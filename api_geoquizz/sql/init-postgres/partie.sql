@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS "parties";
 CREATE TABLE IF NOT EXISTS parties(
     id_partie CHAR(36) PRIMARY KEY DEFAULT (gen_random_uuid ()),
     sequence_photo CHAR(36) NOT NULL,
-    id_user CHAR(36) NOT NULL,
+    id_user CHAR(36),
     score INTEGER NOT NULL,
     CONSTRAINT fk_sequence
         FOREIGN KEY (sequence_photo)
