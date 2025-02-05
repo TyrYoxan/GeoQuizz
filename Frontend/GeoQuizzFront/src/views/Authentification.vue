@@ -48,7 +48,7 @@ const signup = async () => {
     alert('Inscription réussie ! Vous pouvez maintenant vous connecter.')
     connexion.value = false
   } catch (error) {
-    alert('Erreur lors de l’inscription : utilisateur déjà existant')
+    alert('Erreur lors de l’inscription : utilisateur déjà existant ')
   } finally {
     isLoading.value = false
   }
