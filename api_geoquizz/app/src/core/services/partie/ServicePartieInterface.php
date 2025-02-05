@@ -10,6 +10,6 @@ interface ServicePartieInterface
     public function createPartie(InputPartieDTO $partie): void;
     public function updatePartie(DTOPartie $partie): void;
     public function getPartie($id);
-
     public function getUserParties(String $id): array;
+    public function createSequence(String $sequence, String $name);
 }

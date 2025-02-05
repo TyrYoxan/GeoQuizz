@@ -54,4 +54,14 @@ class PartieRepository implements RepositoryPartieInterface
         $rq->execute();
         return $rq->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function createSequence(string $sequence, string $name): string
+    {
+        $rq = $this->db->prepare("INSERT INTO sequences
+                             (sequence, name) VALUES (:sequence, :name) RETURNING id_sequence");
+        $rq->bindValue(':sequence', $sequence, PDO::PARAM_STR);
+        $rq->bindValue(':name', $name, PDO::PARAM_STR);
+        $rq->execute();
+        return $rq->fetchColumn();
+    }
 }

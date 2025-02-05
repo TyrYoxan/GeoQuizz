@@ -17,13 +17,10 @@ return [
         return $pdo;
     },
 
-    'praticien_client' => function(ContainerInterface $c){
+    'client.directus' => function(ContainerInterface $c){
         return new GuzzleHttp\Client([
-            'base_uri' => 'http://api.praticiens:80',
+            'base_uri' => 'http://directus:8055',
             'timeout' => 2.0,
-            'headers' => [
-                'Origin' => 'http://api.rdv:80'
-            ]
         ]);
     },
 
@@ -52,7 +49,7 @@ return [
     },
 
     'CreatePartie' => function(ContainerInterface $c) {
-        return new CreatePartieAction($c->get(ServicePartieInterface::class));
+        return new CreatePartieAction($c->get(ServicePartieInterface::class), $c->get('client.directus'));
     },
 
     'GetProfil' => function(ContainerInterface $c) {

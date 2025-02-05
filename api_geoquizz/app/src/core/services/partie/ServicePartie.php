@@ -36,4 +36,9 @@ class ServicePartie implements ServicePartieInterface
     {
         return $this->repositoryPartie->getUserParties($id);
     }
+
+    public function createSequence(string $sequence, string $name): String
+    {
+       return $this->repositoryPartie->createSequence($sequence,$name);
+    }
 }
