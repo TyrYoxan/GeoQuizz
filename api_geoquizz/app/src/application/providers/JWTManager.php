@@ -1,7 +1,7 @@
 <?php
-namespace api_auth\application\providers\auth;
+namespace api_geoquizz\application\providers;
 
-use api_auth\core\dto\AuthDTO;
+use api_auth\application\providers\auth\AuthInvalidException;
 use DI\Container;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
@@ -14,7 +14,7 @@ class JWTManager{
 	protected int $tempsValidite;
 	protected string $emmeteur, $audience;
 	protected string $key, $algo;
-	protected Logger $loger;
+	//protected Logger $loger;
 	
 
 	public function __construct(Container $co)
@@ -23,28 +23,25 @@ class JWTManager{
 		$this->emmeteur = $co->get('token.emmeteur');
 		$this->audience = $co->get('token.audience');
 		// $this->key = parse_ini_file($co->get('token.key.path'))['JWT_SECRET_KEY'];
-		$this->key = getenv('JWT_SECRET_KEY');
+		$this->key = 'secret';//getenv('JWT_SECRET_KEY');
 		$this->algo = $co->get('token.jwt.algo');
-		$this->loger = $co->get(Logger::class)->withName("JWTManager");;
 
 	}
 
-	public function createAcessToken(AuthDTO $user): string{
-		$payload = [ 
+	public function createAcessToken(String $id): string{
+		$payload = [
 			'iss'=> $this->emmeteur,
 			'aud'=>$this->audience,
 			'iat'=>time(),
 			'exp'=>time()+$this->tempsValidite,
-			'sub' => $user->id,
 			'data' => [
-                'id' => $user->id,
-                'email' => $user->email,
-                'pseudo' => $user->pseudo ?? null,
-                'role' => $user->role,
+                'user' =>$id
             ]
-        ] ;
+		];
 
 		return JWT::encode($payload, $this->key, $this->algo);
+
+
 	}
 	public function createRefresh(array $paylod): string{
         $payload = [
@@ -63,14 +60,11 @@ class JWTManager{
         try {
             return (array) JWT::decode($token, new Key($this->key, $this->algo));
         } catch (ExpiredException $e) {
-            $this->loger->error("Expired token: " . $e->getMessage());
-            throw new AuthInvalidException("Expired token");
+            throw new \Exception($e->getMessage());
         } catch (SignatureInvalidException $e) {
-            $this->loger->error("Invalid signature: " . $e->getMessage());
-            throw new AuthInvalidException("Invalid signature");
+            throw new \Exception($e->getMessage());
         } catch (\Exception $e) {
-            $this->loger->error("Token decode error: " . $e->getMessage());
-            throw new AuthInvalidException("Invalid token");
+            throw new \Exception($e->getMessage());
         }
 	}
 }

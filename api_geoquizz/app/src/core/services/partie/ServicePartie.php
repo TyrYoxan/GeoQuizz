@@ -29,7 +29,7 @@ class ServicePartie implements ServicePartieInterface
 
     public function updatePartie(DTOPartie $partie): void
     {
-        // TODO: Implement updatePartie() method.
+        $this->repositoryPartie->updatePartie($partie);
     }
 
     public function getUserParties(string $id): array

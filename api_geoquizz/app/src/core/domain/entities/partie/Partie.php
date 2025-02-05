@@ -12,7 +12,6 @@ class Partie extends DTO
     protected int $score;
     /**
      * @param mixed $sequence_photo
-     * @param mixed $user
      * @param mixed $score
      */
     public function __construct(String $sequence_photo, int $score)

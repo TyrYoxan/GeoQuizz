@@ -3,6 +3,7 @@
 use api_geoquizz\application\actions\CreatePartieAction;
 use api_geoquizz\application\actions\GetPartieAction;
 use api_geoquizz\application\actions\GetProfilAction;
+use api_geoquizz\application\actions\UpdatePartieAction;
 use api_geoquizz\application\providers\JWTManager;
 use api_geoquizz\core\services\partie\ServicePartie;
 use api_geoquizz\core\services\partie\ServicePartieInterface;
@@ -44,15 +45,22 @@ return [
         return new ServicePartie($c->get('PartieRepository'));
     },
 
-    'GetPartie' => function(ContainerInterface $c) {
+    GetPartieAction::class => function(ContainerInterface $c) {
         return new GetPartieAction($c->get(ServicePartieInterface::class));
     },
 
     CreatePartieAction::class=> function(ContainerInterface $c) {
-        return new CreatePartieAction($c->get(ServicePartieInterface::class), $c->get('client.directus'));
+        return new CreatePartieAction($c->get(ServicePartieInterface::class),
+                                      $c->get('client.directus'),
+                                      $c->get(JWTManager::class));
     },
 
-    'GetProfil' => function(ContainerInterface $c) {
-        return new GetProfilAction($c->get(JWTManager::class), $c->get(ServicePartieInterface::class));
+    GetProfilAction::class => function(ContainerInterface $c) {
+        return new GetProfilAction($c->get(JWTManager::class),
+                                   $c->get(ServicePartieInterface::class));
+    },
+
+    UpdatePArtieAction::class=> function(ContainerInterface $c) {
+        return new UpdatePartieAction($c->get(ServicePartieInterface::class), $c->get(JWTManager::class));
     }
 ];
