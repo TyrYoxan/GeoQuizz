@@ -25,6 +25,10 @@ const signin = async () => {
       }),
     })
 
+    if (!response.ok) {
+      throw new Error('Erreur lors de la connexion')
+    }
+
     // Sauvegarde du token dans localStorage
     const accessToken = response.headers.access_token
     localStorage.setItem('authToken', accessToken)
@@ -46,7 +50,7 @@ const signup = async () => {
 
   isLoading.value = true
   try {
-    await fetch('http://localhost:40000/signup', {
+    const response = await fetch('http://localhost:40000/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -56,6 +60,9 @@ const signup = async () => {
         password: password.value,
       }),
     })
+    if (!response.ok) {
+      throw new Error('Erreur lors de l’inscription')
+    }
     alert('Inscription réussie ! Vous pouvez maintenant vous connecter.')
     connexion.value = false
   } catch (error) {
