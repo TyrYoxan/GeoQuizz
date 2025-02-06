@@ -36,26 +36,27 @@ const logout = () => {
             <p v-if="isAuthenticated">Le principe est simple, avec l'image que vous aurez à disposition, vous devez trouver le lieu où elle a été prise.<br>
             Plus vous êtes proche et rapide, plus vous gagnez de points. Bonne chance !
             </p>
-          <h2 v-if="!isAuthenticated">Vous devez vous connecter pour jouer,<br> cliquez sur l'icon de profile en haut à droite !</h2>
-
-          <div v-if="isAuthenticated" class="router">
-            <router-link to="/partie" class="btn btn-primary">Nouvelle Partie</router-link>
-          </div> 
+          <h2 v-if="!isAuthenticated" class="NotConnected">Vous devez vous connecter pour jouer,<br> cliquez sur l'icon de profile en haut à droite !</h2> 
         </div>
       </div>
     </div>
+
+    <div v-if="isAuthenticated" class="router">
+          <router-link to="/partie" class="btn btn-primary">Nouvelle Partie</router-link>
+    </div>
+
     <div v-if="isAuthenticated" class="best">
       <div class="score">
-      <h2>Meilleurs scores :</h2>
-      <p>1. Michelle : 1000 points</p>
-      <p>2. Miguel : 999 points</p>
-      <p>3. Mirabelle : 998 points</p>
+      <h2>Vos dernières parties :</h2>
+      <p>1. Nancy</p>
+      <p>2. Paris</p>
+      <p>3. Marseille</p>
       </div>
       <div class="score">
-      <h2>Parties en cours :</h2>
-      <p>1. Michelle</p>
-      <p>2. Miguel</p>
-      <p>3. Mirabelle</p>
+      <h2>Parties public :</h2>
+      <p>1. Epinal</p>
+      <p>2. Strasbourg</p>
+      <p>3. Nantes</p>
       </div>
     </div>
   </body>
@@ -71,17 +72,18 @@ body{
 
 
 h1{
-  font-size: 5em;
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 5.5em;
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 
 h2{
   font-size: 3em;
   font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
+
 p{
   font-size: 1.5em;
-  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 
 
@@ -109,6 +111,7 @@ ul{
   border-bottom: 3px solid black;
 
 }
+
 
 .score h2{
   background-color:#e87619;
@@ -139,6 +142,7 @@ ul{
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   background-color: rgba(255, 255, 255, 0.5);
+  margin-top: 3%;
 }
 
 .score p{
@@ -148,19 +152,15 @@ ul{
 .navbar {
   background-color: #e87619;
   overflow: hidden;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  height: 5%;
 }
 
 
 
 .icon {
-  width: 30px;
-  height: 30px;
+  width: 3%;
+  height: 3%;
   float: right;
-  margin-right: 20px;
+  margin-right: 2%;
 }
 
 .icon:hover {
@@ -174,8 +174,8 @@ ul{
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 20em; 
-  height: 4em; 
+  width: 20%; 
+  height: 10%; 
   border-radius: 10px; 
   color: white;
   font-size: 1.2em;
@@ -184,8 +184,8 @@ ul{
   transition: background-color 0.3s ease; 
   text-decoration: none;
   margin: auto;
-  margin-top: 15%;
-  margin-bottom: 5%;
+
+
 }
 
 .router:hover {
@@ -195,9 +195,91 @@ ul{
 .container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 48em;
-  margin: 0;
+  height: 30em;
+  margin-bottom: 6%;
+}
+
+@media screen and ((min-width: 0em) and (max-width: 70em)) {
+  .best{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+  .score{
+    margin-top: 3%;
+  }
+
+  .container h1{
+    font-size: 3.5em;
+  }
+
+  .container h2{
+    font-size: 2.5em;
+  }
+
+  .container p{
+    font-size: 1.3em;
+  } 
+
+  .container{
+    height: 25em;
+    margin-bottom: 2%;
+  }
+
+  .navbar {
+    width: auto;
+  }
+}
+
+@media screen and ((min-width: 0em) and (max-width: 63em)) {
+
+  .container h1{
+    font-size: 3em;
+  }
+
+  .container h2{
+    font-size: 2em;
+  }
+
+  .container p{
+    font-size: 1.1em;
+  } 
+
+  .container{
+    height: 25em;
+    margin-bottom: 2%;
+  }
+
+  .navbar {
+    width: 100%;
+  }
+
+  
+}
+
+@media screen and ((min-width: 0em) and (max-width: 55em)) {
+
+.container h1{
+  font-size: 3em;
+}
+
+.container h2{
+  font-size: 2em;
+}
+
+.container p{
+  font-size: 1em;
+} 
+
+.container{
+  height: 25em;
+  margin-bottom: 2%;
+}
+
+.navbar {
+    width: 100%;
+}
+
 }
 
 

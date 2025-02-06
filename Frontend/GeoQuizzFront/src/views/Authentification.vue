@@ -28,14 +28,14 @@ const signin = async () => {
     if (!response.ok) {
       throw new Error('Erreur lors de la connexion')
     }
-
+    alert('Connexion réussie !');
     // Sauvegarde du token dans localStorage
     const accessToken = response.headers.access_token
     localStorage.setItem('authToken', accessToken)
 
     router.push('/home')
   } catch (error) {
-    alert('Erreur lors de la connexion : mot de passe ou email incorrect')
+    alert('Erreur lors de la connexion : mot de passe ou email incorrect');
   } finally {
     isLoading.value = false
   }
@@ -76,6 +76,7 @@ const signup = async () => {
 </script>
 
 <template>
+  <body>
   <div class="wrapper fadeInDown">
     <div id="formContent">
       <!-- Spinner -->
@@ -133,6 +134,7 @@ const signup = async () => {
       </form>
     </div>
   </div>
+</body>
 </template>
 
 
@@ -302,8 +304,8 @@ input::placeholder {
 
 body {
   background-image: url("../assets/statueGold.jpg");
-  background-size: cover; /* Adapte l'image à la taille de l'écran */
-  background-position: center; /* Centre l'image */
-  background-repeat: no-repeat; /* Pas de répétition */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 </style>
