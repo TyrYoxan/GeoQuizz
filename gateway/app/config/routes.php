@@ -25,6 +25,9 @@ return function (\Slim\App $app): \Slim\App {
     $app->get('/parties/{id}', GenericGeoquizzAction::class)->setName('getPartie');
     $app->post('/parties/create', GenericGeoquizzAction::class)->setName('createPartie');
     $app->patch('/parties/update', GenericGeoquizzAction::class)->setName('updatePartie');
+    $app->get('/sequences', GenericGeoquizzAction::class)->setName('sequences');
+    $app->get('/sequences/{id}', GenericGeoquizzAction::class)->setName('sequence');
+    $app->patch('/sequences/{id}', GenericGeoquizzAction::class)->setName('update_sequence');
 
     // Service Directus
     $app->get('/directus/{id}', GenericDirectusAction::class)->setName('getImage');
