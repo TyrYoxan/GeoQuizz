@@ -2,7 +2,9 @@
 import {onMounted, ref} from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { useRouter } from 'vue-router';
 //Predefined location
+const routeur = useRouter();
 const predefinedLocation = [
   { lat: 48.698889, lng: 6.177778 }, // Porte de la Craffe
   { lat: 48.691389, lng: 6.186389 }, // Cathédrale Notre Dame de l'Annonciation
@@ -30,6 +32,7 @@ const imageUrls = [
   new URL('@/assets/uploads/ca6a2d0c-9649-4b61-9dc8-da0bd8643a10.jpeg', import.meta.url).href,
 ];
 const currentImageIndex = ref(0);
+let numImages = 0;
 const imageURL = ref(imageUrls[currentImageIndex.value]);
 const timeLeft = ref(20); // 20 seconds
 let timerInterval = null;
@@ -68,6 +71,7 @@ function startTimer() {
   }, 1000);
 }
 function changeImage() {
+  numImages++;
   // Clear the exact point marker if it exists
   if (currentMarker) {
     map.removeLayer(currentMarker);
@@ -81,6 +85,10 @@ function changeImage() {
 
 
   // Change the image and reset the timer
+  if(numImages === imageUrls.length){
+    timeLeft.value = 0;
+    routeur.push('/');
+  }
   currentImageIndex.value = (currentImageIndex.value + 1) % imageUrls.length;
   imageURL.value = imageUrls[currentImageIndex.value];
   map.setView([48.68935, 6.18281], 12)
