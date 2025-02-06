@@ -32,9 +32,9 @@ const logout = () => {
         <div class="col-12">
           <h1>Bienvenue sur GeoQuizz !</h1>
 
-          <h2 v-if="isAuthenticated">Le meilleur jeu de Géographie Nancéien !<br></h2>
+          <h2 v-if="isAuthenticated" class="connected">Le meilleur jeu de Géographie Nancéien !<br></h2>
             <p v-if="isAuthenticated">Le principe est simple, avec l'image que vous aurez à disposition, vous devez trouver le lieu où elle a été prise.<br>
-            Plus vous êtes proche et rapide, plus vous gagnez de points. <br>Bonne chance !
+            Plus vous êtes proche et rapide, plus vous gagnez de points. Bonne chance !
             </p>
           <h2 v-if="!isAuthenticated">Vous devez vous connecter pour jouer,<br> cliquez sur l'icon de profile en haut à droite !</h2>
 
@@ -65,21 +65,31 @@ const logout = () => {
 
 
 <style scoped>
+body{
+  background-image: url("../assets/stan.jpg");
+}
+
 
 h1{
   font-size: 5em;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 h2{
   font-size: 3em;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 p{
   font-size: 1.5em;
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
+
 
 .btn{
   color: white;
   font-size: 2em;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  
 }
 
 ul{
@@ -92,20 +102,32 @@ ul{
   justify-content: center;
 }
 
+
 .best h2{
   padding: 0.3em;
-  border: 3px solid black;
-  color: #1459b0;
+  color: white;
+  border-bottom: 3px solid black;
+
+}
+
+.score h2{
+  background-color:#e87619;
+  opacity: 0.8;
+  margin-top: 0%;
+  margin-bottom: 5%;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
 }
 
 .container h1{
   border: 3px solid black;
-  color: #1459b0;
+  color: rgb(253, 235, 220);
   border-radius: 20px;
 }
 
-.container h2{
+.connected{
   border-bottom: 2px solid black;
+  border-radius: 20px;
 }
 
 .score{
@@ -113,6 +135,10 @@ ul{
   flex-direction: column;
   justify-content: center;
   margin: auto;
+  border: 3px solid black;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 .score p{
@@ -120,7 +146,7 @@ ul{
 }
 
 .navbar {
-  background-color: #1459b0;
+  background-color: #e87619;
   overflow: hidden;
   position: fixed;
   top: 0;
@@ -143,7 +169,8 @@ ul{
 }
 
 .router {
-  background-color: rgb(31, 124, 246);
+  background-color: #e87619;
+  opacity: 0.9;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -157,18 +184,19 @@ ul{
   transition: background-color 0.3s ease; 
   text-decoration: none;
   margin: auto;
-  margin-top: 3em;
+  margin-top: 15%;
+  margin-bottom: 5%;
 }
 
 .router:hover {
-  background-color: rgb(18, 86, 186);
+  background-color: #e26701;
 }
 
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 47em;
+  height: 48em;
   margin: 0;
 }
 

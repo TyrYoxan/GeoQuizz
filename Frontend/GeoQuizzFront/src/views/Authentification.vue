@@ -14,16 +14,21 @@ const isLoading = ref(false)
 const signin = async () => {
   isLoading.value = true
   try {
-    const response = await axios.post('http://localhost:40000/signin', {
-      email: email.value,
-      password: password.value,
+    const response = await fetch('http://localhost:40000/signin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email.value,
+        password: password.value,
+      }),
     })
 
     // Sauvegarde du token dans localStorage
     const accessToken = response.headers.access_token
     localStorage.setItem('authToken', accessToken)
 
-    alert('Connexion réussie !')
     router.push('/home')
   } catch (error) {
     alert('Erreur lors de la connexion : mot de passe ou email incorrect')
@@ -41,13 +46,20 @@ const signup = async () => {
 
   isLoading.value = true
   try {
-    await axios.post('http://localhost:40000/signup', {
-      email: email.value,
-      password: password.value,
+    await fetch('http://localhost:40000/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email.value,
+        password: password.value,
+      }),
     })
     alert('Inscription réussie ! Vous pouvez maintenant vous connecter.')
     connexion.value = false
   } catch (error) {
+    console.log(error);
     alert('Erreur lors de l’inscription : utilisateur déjà existant ')
   } finally {
     isLoading.value = false
@@ -149,14 +161,8 @@ const signup = async () => {
   }
 }
 
-html {
-  background-color: #56baed;
-}
 
-body {
-  font-family: "Poppins", sans-serif;
-  height: 100vh;
-}
+
 
 a {
   color: #92badd;
@@ -285,5 +291,12 @@ input::placeholder {
 
 * {
   box-sizing: border-box;
+}
+
+body {
+  background-image: url("../assets/statueGold.jpg");
+  background-size: cover; /* Adapte l'image à la taille de l'écran */
+  background-position: center; /* Centre l'image */
+  background-repeat: no-repeat; /* Pas de répétition */
 }
 </style>
