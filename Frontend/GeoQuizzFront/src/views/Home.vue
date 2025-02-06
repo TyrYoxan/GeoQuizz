@@ -11,6 +11,10 @@ const logout = () => {
   alert('Déconnexion réussie. À bientôt !')
   router.push('/Authentification')
 }
+
+const viewProfile = () => {
+  router.push('/profile')
+}
 </script>
 
 <template>
@@ -41,13 +45,18 @@ const logout = () => {
       </div>
     </div>
 
-    <div v-if="isAuthenticated" class="router">
+    <div v-if="isAuthenticated" class="AllRouter">
+      <div v-if="isAuthenticated" class="router">
           <router-link to="/partie" class="btn btn-primary">Nouvelle Partie</router-link>
+      </div>
+      <div v-if="isAuthenticated" class="router">
+          <router-link to="/profile" class="btn btn-primary">Profile</router-link>
+      </div>
     </div>
 
     <div v-if="isAuthenticated" class="best">
       <div class="score">
-      <h2>Vos dernières parties :</h2>
+      <h2>Dernières parties :</h2>
       <p>1. Nancy</p>
       <p>2. Paris</p>
       <p>3. Marseille</p>
@@ -73,12 +82,12 @@ body{
 
 h1{
   font-size: 5.5em;
-  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 
 h2{
   font-size: 3em;
-  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 p{
@@ -115,7 +124,7 @@ ul{
 
 .score h2{
   background-color:#e87619;
-  opacity: 0.8;
+  opacity: 1;
   margin-top: 0%;
   margin-bottom: 5%;
   border-top-left-radius: 15px;
@@ -170,7 +179,7 @@ ul{
 
 .router {
   background-color: #e87619;
-  opacity: 0.9;
+  opacity: 1;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -184,6 +193,7 @@ ul{
   transition: background-color 0.3s ease; 
   text-decoration: none;
   margin: auto;
+  margin-top: 2%;
 
 
 }
