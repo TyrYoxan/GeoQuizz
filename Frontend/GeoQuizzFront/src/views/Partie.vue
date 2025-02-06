@@ -83,7 +83,7 @@ function changeImage() {
   // Change the image and reset the timer
   currentImageIndex.value = (currentImageIndex.value + 1) % imageUrls.length;
   imageURL.value = imageUrls[currentImageIndex.value];
-  map.setView([predefinedLocation[currentImageIndex.value].lat, predefinedLocation[currentImageIndex.value].lng], 12);
+  map.setView([48.68935, 6.18281], 12)
   timeLeft.value = 20;
 
   // Reactivate the map click event
@@ -105,8 +105,8 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
   const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
       Math.sin(dLng / 2) * Math.sin(dLng / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return 1000 - (R * c);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)/200);
+  return 1000 - (R * c) > 0 ? 1000 - (R * c) : 0;
 }
 
 function showExactPoint() {
@@ -142,8 +142,7 @@ function showExactPoint() {
 
 img {
   width: 100%;
-  height: 100vh;
-  object-fit: cover;
+  height: auto;
 }
 
 .map-container {
@@ -159,7 +158,7 @@ img {
   position: fixed;
   bottom: 20px;
   right: 10px;
-  padding: 10px 20px;
+  padding: 10px 125px;
   background-color: red;
   color: white;
   border: none;
