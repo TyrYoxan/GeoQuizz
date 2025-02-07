@@ -67,19 +67,19 @@ services:
     networks:
       - geoquizz
 
-#  frontend:
-#    build:
-#      context: build
-#      dockerfile: Front.Dockerfile
-#    ports:
-#      - '40008:80'
-#    working_dir: /app
-#    volumes:
-#      - ./Frontend/GeoQuizzFront:/app
-#      - /app/node_modules
-#    environment:
-#      - NODE_ENV=development
-#    command: sh -c "npm install && npm run dev"
+  frontend:
+    image: node:22
+    ports:
+      - '40008:5173'
+    working_dir: /app
+    volumes:
+      - ./Frontend/GeoQuizzFront:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: sh -c "npm install && npm run dev -- --host"
+    networks:
+      - geoquizz
 
   ################################
   #           GATEWAY            #
@@ -181,3 +181,37 @@ services:
     - '40010:8080'
     networks:
       - geoquizz
+
+  # ===================MESSAGE BROKER================
+  rabbitmq:
+    image: rabbitmq:4-management
+    ports:
+      - '40005:15672'
+      - '40006:5672'
+    volumes:
+      - ./rabbitmq_dir:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 8s
+      timeout: 30s
+      retries: 3
+
+  mailcatcher:
+    image: dockage/mailcatcher:latest
+    ports:
+      - "40007:1080"
+
+  mail:
+    build:
+      context: build
+      dockerfile: 8.3-cli.Dockerfile
+    volumes:
+      - ./api_mail:/var/php/
+    working_dir: /var/php
+    depends_on:
+      - rabbitmq
+      - mailcatcher
+    command: php consumer.php
