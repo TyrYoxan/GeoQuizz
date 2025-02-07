@@ -7,7 +7,7 @@ use api_geoquizz\core\dto\InputPartieDTO;
 
 interface ServicePartieInterface
 {
-    public function createPartie(InputPartieDTO $partie): void;
+    public function createPartie(InputPartieDTO $partie): String;
     public function updatePartie(DTOPartie $partie): void;
     public function getPartie($id);
     public function getUserParties(String $id): array;

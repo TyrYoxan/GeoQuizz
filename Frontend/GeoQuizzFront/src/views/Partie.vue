@@ -3,8 +3,17 @@ import {onMounted, ref} from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useRouter } from 'vue-router';
+import router from "@/router/index.js";
 //Predefined location
-const routeur = useRouter();
+
+const getPhotos = () => {
+  fetch(`http://localhost:40000/parties/{{router.params.id}}`,{
+    method: 'GET',
+  }).then(response => response.json())
+   .then(data => {
+
+   })
+}
 const predefinedLocation = [
   { lat: 48.698889, lng: 6.177778 }, // Porte de la Craffe
   { lat: 48.691389, lng: 6.186389 }, // Cathédrale Notre Dame de l'Annonciation
@@ -34,9 +43,9 @@ const imageUrls = [
 const currentImageIndex = ref(0);
 let numImages = 0;
 const imageURL = ref(imageUrls[currentImageIndex.value]);
-const timeLeft = ref(20); // 20 seconds
+const timeLeft = ref(20);
 let timerInterval = null;
-const score = ref(0); // Initialize score
+const score = ref(0);
 // Store the current marker
 let currentMarker = null;
 let map = null;
@@ -48,7 +57,7 @@ const handleClick = (e) => {
   }
 
   currentMarker = L.marker([lat, lng]).addTo(map).openPopup();
-  score.value = Math.round(calculateDistance(lat, lng, predefinedLocation[currentImageIndex.value].lat, predefinedLocation[currentImageIndex.value].lng));
+  score.value += Math.round(calculateDistance(lat, lng, predefinedLocation[currentImageIndex.value].lat, predefinedLocation[currentImageIndex.value].lng));
 };
 
 onMounted(() => {
@@ -87,7 +96,7 @@ function changeImage() {
   // Change the image and reset the timer
   if(numImages === imageUrls.length){
     timeLeft.value = 0;
-    routeur.push('/');
+    router.push('/');
   }
   currentImageIndex.value = (currentImageIndex.value + 1) % imageUrls.length;
   imageURL.value = imageUrls[currentImageIndex.value];

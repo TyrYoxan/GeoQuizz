@@ -24,6 +24,10 @@ class GetProfilAction extends AbstractAction
         $token = str_replace('Bearer ', '', $token);
         $data = $this->jwtManager->decodeToken($token);
 
+        if (empty($data)) {
+            return JsonRenderer::render($rs, 401, ['message' => 'Token not found']);
+        }
+
         $parties = $this->servicePartie->getUserParties($data['data']->id);
         $data['data']->parties = $parties;
         return JSONRenderer::render($rs, 200, $data['data']);

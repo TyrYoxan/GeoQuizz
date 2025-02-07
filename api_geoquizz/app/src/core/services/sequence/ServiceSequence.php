@@ -39,4 +39,9 @@ class ServiceSequence implements ServiceSequenceInterface
             throw new NotFoundSequenceException($e->getMessage());
         }
     }
+
+    public function getThemes(): array
+    {
+        return $this->repositorySequence->getThemes();
+    }
 }

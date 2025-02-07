@@ -1,9 +1,10 @@
 <script setup>
-import { ref } from 'vue'
+import {onMounted, ref} from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const isAuthenticated = ref(!!localStorage.getItem('authToken'))
+let publicSequences = ref([])
 
 const logout = () => {
   localStorage.removeItem('authToken')
@@ -12,17 +13,35 @@ const logout = () => {
   router.push('/Authentification')
 }
 
+const getPublicSequence = () => {
+  fetch('http://localhost:40000/sequences')
+      .then(res => res.json())
+      .then(sequences => {
+        console.log(sequences)
+        for (let sequence of sequences.sequences) {
+          if (sequence.status) {
+            publicSequences.value.push(sequence)
+          }
+        }
+      })
+}
 const viewProfile = () => {
   router.push('/profile')
 }
+
+onMounted(getPublicSequence)
 </script>
 
 <template>
   <header>
     <nav class="navbar">
       <ul>
+
         <li v-if="isAuthenticated" @click="logout" class="btn btn-primary">
           <img class="icon" src="../assets/porte.png" alt="logout" />
+        </li>
+        <li v-if="isAuthenticated" @click="viewProfile" class="btn btn-primary">
+          <img class="icon" src="../assets/utilisateur.png" alt="profil" />
         </li>
         <router-link v-else to="/Authentification" class="btn btn-primary">
           <img class="icon" src="../assets/compte.png" alt="login" />
@@ -36,36 +55,28 @@ const viewProfile = () => {
         <div class="col-12">
           <h1>Bienvenue sur GeoQuizz !</h1>
 
-          <h2 v-if="isAuthenticated" class="connected">Le meilleur jeu de Géographie Nancéien !<br></h2>
-            <p v-if="isAuthenticated">Le principe est simple, avec l'image que vous aurez à disposition, vous devez trouver le lieu où elle a été prise.<br>
+          <h2 class="connected">Le meilleur jeu de Géographie Nancéien !<br></h2>
+            <p>Le principe est simple, avec l'image que vous aurez à disposition, vous devez trouver le lieu où elle a été prise.<br>
             Plus vous êtes proche et rapide, plus vous gagnez de points. Bonne chance !
             </p>
-          <h2 v-if="!isAuthenticated" class="NotConnected">Vous devez vous connecter pour jouer,<br> cliquez sur l'icon de profile en haut à droite !</h2> 
         </div>
       </div>
     </div>
 
-    <div v-if="isAuthenticated" class="AllRouter">
-      <div v-if="isAuthenticated" class="router">
-          <router-link to="/partie" class="btn btn-primary">Nouvelle Partie</router-link>
-      </div>
-      <div v-if="isAuthenticated" class="router">
-          <router-link to="/profile" class="btn btn-primary">Profile</router-link>
+    <div  class="AllRouter">
+      <div  class="router">
+          <router-link to="/createPartie" class="btn btn-primary">Nouvelle Partie</router-link>
       </div>
     </div>
 
-    <div v-if="isAuthenticated" class="best">
-      <div class="score">
-      <h2>Dernières parties :</h2>
-      <p>1. Nancy</p>
-      <p>2. Paris</p>
-      <p>3. Marseille</p>
-      </div>
+    <div class="best">
       <div class="score">
       <h2>Parties public :</h2>
-      <p>1. Epinal</p>
-      <p>2. Strasbourg</p>
-      <p>3. Nantes</p>
+        <ul>
+          <li v-for="sequence in publicSequences" :key="sequence.sequence_id">
+            <p>{{ sequence.name }}</p>
+          </li>
+        </ul>
       </div>
     </div>
   </body>
@@ -100,7 +111,7 @@ p{
   color: white;
   font-size: 2em;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  
+
 }
 
 ul{
@@ -146,11 +157,10 @@ ul{
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: auto;
   border: 3px solid black;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(142, 142, 142, 0.5);
   margin-top: 3%;
 }
 
@@ -166,15 +176,18 @@ ul{
 
 
 .icon {
-  width: 3%;
-  height: 3%;
+  width: 2%;
+  height: 2%;
   float: right;
   margin-right: 2%;
+  transition: background-color 0.3s ease;
+
 }
 
 .icon:hover {
   cursor: pointer;
-  background-color: rgb(250, 251, 252);
+  background-color: rgba(246, 133, 42, 0.71);
+  border-radius: 10px;
 }
 
 .router {
@@ -183,14 +196,14 @@ ul{
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 20%; 
-  height: 10%; 
-  border-radius: 10px; 
+  width: 20%;
+  height: 10%;
+  border-radius: 10px;
   color: white;
   font-size: 1.2em;
   text-align: center;
-  cursor: pointer; 
-  transition: background-color 0.3s ease; 
+  cursor: pointer;
+  transition: background-color 0.3s ease;
   text-decoration: none;
   margin: auto;
   margin-top: 2%;
@@ -229,7 +242,7 @@ ul{
 
   .container p{
     font-size: 1.3em;
-  } 
+  }
 
   .container{
     height: 25em;
@@ -253,7 +266,7 @@ ul{
 
   .container p{
     font-size: 1.1em;
-  } 
+  }
 
   .container{
     height: 25em;
@@ -264,7 +277,7 @@ ul{
     width: 100%;
   }
 
-  
+
 }
 
 @media screen and ((min-width: 0em) and (max-width: 55em)) {
@@ -279,7 +292,7 @@ ul{
 
 .container p{
   font-size: 1em;
-} 
+}
 
 .container{
   height: 25em;

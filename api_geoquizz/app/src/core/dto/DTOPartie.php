@@ -3,21 +3,22 @@
 namespace api_geoquizz\core\dto;
 
 use api_geoquizz\core\domain\entities\partie\Partie;
+use api_geoquizz\core\domain\entities\sequence\Sequence;
 
 class DTOPartie extends DTO implements \JsonSerializable
 {
-    protected String $sequence_photo;
+    protected DTOSequence $sequence_photo;
     protected int $score;
     public function __construct(Partie $partie)
     {
-        $this->sequence_photo = $partie->sequence_photo;
+        $this->sequence_photo = new DTOSequence($partie->sequence_photo);
         $this->score = $partie->score;
     }
 
     public function jsonSerialize(): array
     {
         return [
-           'sequence_photo' => $this->sequence_photo,
+           'sequence' => $this->sequence_photo,
            'score' => $this->score
         ];
     }

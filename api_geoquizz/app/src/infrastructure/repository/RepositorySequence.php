@@ -45,4 +45,11 @@ class RepositorySequence implements RepositorySequenceInterface
         }
 
     }
+
+    public function getThemes(): array
+    {
+        $rq = $this->db->prepare("SELECT DISTINCT name FROM sequences");
+        $rq->execute();
+        return $rq->fetchAll(PDO::FETCH_COLUMN);
+    }
 }

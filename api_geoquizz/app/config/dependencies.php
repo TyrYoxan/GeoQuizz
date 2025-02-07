@@ -5,6 +5,7 @@ use api_geoquizz\application\actions\GetPartieAction;
 use api_geoquizz\application\actions\GetProfilAction;
 use api_geoquizz\application\actions\GetSequenceAction;
 use api_geoquizz\application\actions\GetSequencesAction;
+use api_geoquizz\application\actions\GetThemeAction;
 use api_geoquizz\application\actions\UpdatePartieAction;
 use api_geoquizz\application\actions\UpdateSequenceAction;
 use api_geoquizz\application\providers\JWTManager;
@@ -89,4 +90,8 @@ return [
     UpdateSequenceAction::class=> function(ContainerInterface $c) {
         return new UpdateSequenceAction($c->get(ServiceSequenceInterface::class));
     },
+
+    GetThemeAction::class=> function(ContainerInterface $c) {
+        return new GetThemeAction($c->get(ServiceSequenceInterface::class));
+    }
 ];

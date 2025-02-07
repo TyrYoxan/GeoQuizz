@@ -2,6 +2,7 @@
 
 namespace api_geoquizz\infrastructure\repository;
 
+use api_geoquizz\core\domain\entities\sequence\Sequence;
 use api_geoquizz\core\dto\InputPartieDTO;
 use api_geoquizz\core\repositoryInterfaces\RepositoryPartieInterface;
 use api_geoquizz\core\domain\entities\partie\Partie;
@@ -17,8 +18,9 @@ class PartieRepository implements RepositoryPartieInterface
     }
     public function getPartie($id): Partie
     {
-        $data = $this->db->prepare("SELECT sequence_photo, user, score
+        $data = $this->db->prepare("SELECT sequence_photo, name, sequence, status, score
                              FROM parties
+                             INNER JOIN sequences ON parties.sequence_photo = sequences.id_sequence
                              WHERE id_partie = :id");
         $data->bindValue(':id', $id, PDO::PARAM_INT);
         $data->execute();
@@ -28,17 +30,20 @@ class PartieRepository implements RepositoryPartieInterface
           throw new NotFoundPartieException("Partie with id " . $id . " not found");
         }
 
-        return new Partie($row['sequence_photo'], $row['score']);
+        $sequence = new Sequence($row['sequence_photo'], $row['name'],$row['sequence'], $row['status'], $row['score']);
+        return new Partie($sequence, $row['score']);
     }
 
-    public function createPartie(InputPartieDTO $partie, String $id_user=null): void
+    public function createPartie(InputPartieDTO $partie, String $id_user=null): String
     {
         $rq = $this->db->prepare("INSERT INTO parties
                              (sequence_photo, id_user, score) VALUES (:sequence_photo,:id_user, :score)");
-        $rq->bindValue(':sequence_photo', $partie->sequence_photo, PDO::PARAM_STR);
+
+        $rq->bindValue(':sequence_photo', $partie->sequence_photo->sequence, PDO::PARAM_STR);
         $rq->bindValue(':id_user', $id_user, PDO::PARAM_STR);
         $rq->bindValue(':score', $partie->score, PDO::PARAM_INT);
         $rq->execute();
+        return $rq->fetchColumn();
     }
 
     public function updatePartie($partie): void
@@ -51,9 +56,10 @@ class PartieRepository implements RepositoryPartieInterface
 
     public function getUserParties(string $id): array
     {
-        $rq = $this->db->prepare("SELECT id_partie, score 
-                                    FROM parties
-                                    WHERE id_user = :id");
+        $rq = $this->db->prepare("SELECT sequence_photo, name, status, score
+                             FROM parties
+                             INNER JOIN sequences ON parties.sequence_photo = sequences.id_sequence
+                             WHERE id_user = :id");
         $rq->bindValue(':id', $id, PDO::PARAM_STR);
         $rq->execute();
         return $rq->fetchAll(PDO::FETCH_ASSOC);

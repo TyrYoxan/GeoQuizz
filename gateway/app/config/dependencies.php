@@ -3,13 +3,15 @@
 use gateway\application\actions\GenericAuthAction;
 use gateway\application\actions\GenericDirectusAction;
 use gateway\application\actions\GenericGeoquizzAction;
+use gateway\middlewares\AuthMiddleware;
+use gateway\middlewares\PartieMiddleware;
 use Psr\Container\ContainerInterface;
 return [
 
     "client.auth" => function (ContainerInterface $c) {
         return new GuzzleHttp\Client([
             'base_uri' => 'http://api_auth:80',
-            'timeout' => 3.0
+            'timeout' => 2.0
         ]);
     },
     "client.geoquizz" => function (ContainerInterface $c) {
@@ -23,6 +25,14 @@ return [
             'base_uri' => 'http://directus:8055',
             'timeout' => 2.0
         ]);
+    },
+
+    AuthMiddleware::class => function(ContainerInterface $c) {
+        return new AuthMiddleware($c->get('client.auth'));
+    },
+
+    PartieMiddleware::class => function(ContainerInterface $c) {
+        return new PartieMiddleware($c->get('client.geoquizz'));
     },
 
     GenericGeoquizzAction::class => function (ContainerInterface $c) {

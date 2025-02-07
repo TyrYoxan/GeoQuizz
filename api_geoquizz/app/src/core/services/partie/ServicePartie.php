@@ -22,9 +22,10 @@ class ServicePartie implements ServicePartieInterface
         return $partie->toDTO();
     }
 
-    public function createPartie(InputPartieDTO $partie): void
+    public function createPartie(InputPartieDTO $partie): String
     {
-        $this->repositoryPartie->createPartie($partie);
+        $test = $this->repositoryPartie->createPartie($partie);
+        return $test;
     }
 
     public function updatePartie(DTOPartie $partie): void

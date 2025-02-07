@@ -67,6 +67,20 @@ services:
     networks:
       - geoquizz
 
+#  frontend:
+#    build:
+#      context: build
+#      dockerfile: Front.Dockerfile
+#    ports:
+#      - '40008:80'
+#    working_dir: /app
+#    volumes:
+#      - ./Frontend/GeoQuizzFront:/app
+#      - /app/node_modules
+#    environment:
+#      - NODE_ENV=development
+#    command: sh -c "npm install && npm run dev"
+
   ################################
   #           GATEWAY            #
   ################################
