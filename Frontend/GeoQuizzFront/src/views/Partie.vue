@@ -18,24 +18,12 @@ const getPhotos = () => {
   }).then(response => response.json())
    .then(data => {
        sequence.value = data.partie.sequence;
-       console.log(photo.value);
    })
     .catch(error => console.error('Error:', error));
 
 }
-const predefinedLocation = [
-  { lat: 48.698889, lng: 6.177778 }, // Porte de la Craffe
-  { lat: 48.691389, lng: 6.186389 }, // Cathédrale Notre Dame de l'Annonciation
-  { lat: 48.698056, lng: 6.174167 }, // Porte Désilles
-  { lat: 48.695833, lng: 6.181667 }, // Place de la Carrière
-  { lat: 48.693611, lng: 6.183333 }, // Place Stanislas
-  { lat: 48.693889, lng: 6.186389 }, // Place d'Alliance
-  { lat: 48.698056, lng: 6.185000 }, // Parc de la Pépinière
-  { lat: 48.690000, lng: 6.179167 }, // Immeuble Génin-Louis
-  { lat: 48.677778, lng: 6.165000 }, // La villa Les Clématites
-  { lat: 48.680556, lng: 6.170833 }, // Parc Sainte-Marie
-
-]
+const predefinedLocation = photo.value
+console.log('GG: '.predefinedLocation)
 // Import the image to display
 const imageUrls = [
   new URL('@/assets/uploads/0f009026-273a-45eb-8426-12f51e4e15ae.jpg', import.meta.url).href,
@@ -105,7 +93,6 @@ function changeImage() {
     map.removeLayer(exactPointMarker);
   }
 
-
   // Change the image and reset the timer
   if(numImages === imageUrls.length){
     timeLeft.value = 0;
@@ -141,7 +128,7 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
 
 function showExactPoint() {
   const location = predefinedLocation[currentImageIndex.value];
-  map.setView([location.lat, location.lng], 15);
+  map.setView([location.lat, location.lon], 15);
   L.marker([location.lat, location.lng]).addTo(map).bindPopup('Exact Point').openPopup();
 }
 </script>
