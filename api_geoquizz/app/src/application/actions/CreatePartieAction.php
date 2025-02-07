@@ -36,7 +36,11 @@ class CreatePartieAction extends AbstractAction
 
         if (!empty($token)) {
             $token = str_replace('Bearer ', '', $token[0]);
-            $data2 = $this->jwtManager->decodeToken($token);
+            try {
+                $data2 = $this->jwtManager->decodeToken($token);
+            } catch (\Exception $e) {
+
+            }
         }
 
         // Validate the request data

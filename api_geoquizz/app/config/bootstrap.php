@@ -16,24 +16,28 @@ $c=$builder->build();
 $app = AppFactory::createFromContainer($c);
 
 //init rabit mq connection
-//$connection = new AMQPStreamConnection(
-//    getenv('AMQP_HOST'),
-//    getenv('AMQP_PORT'),
-//    getenv('AMQP_USER'),
-//    getenv('AMQP_PASSWORD')
-//);
-//$channel = $connection->channel();
+try {
+    $connection = new AMQPStreamConnection(
+        getenv('AMQP_HOST'),
+        getenv('AMQP_PORT'),
+        getenv('AMQP_USER'),
+        getenv('AMQP_PASSWORD')
+    );
+    $channel = $connection->channel();
+} catch (Exception $e) {
+
+}
 
 //init fanout exchange
-//$exchange = getenv('NOTIFY_EXCHANGE');
-//$channel->exchange_declare($exchange, 'fanout', false, true, false);
-//$queue_name = "mail";
-//$channel->queue_declare($queue_name, false, true, false, false);
-//$channel->queue_bind($queue_name , $exchange);
-//
-//// Fermeture de la connexion
-//$channel->close();
-//$connection->close();
+$exchange = getenv('NOTIFY_EXCHANGE');
+$channel->exchange_declare($exchange, 'fanout', false, true, false);
+$queue_name = "mail";
+$channel->queue_declare($queue_name, false, true, false, false);
+$channel->queue_bind($queue_name , $exchange);
+
+// Fermeture de la connexion
+$channel->close();
+$connection->close();
 
 $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
