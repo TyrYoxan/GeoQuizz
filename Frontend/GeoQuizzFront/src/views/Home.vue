@@ -1,7 +1,6 @@
 <script setup>
 import {onMounted, ref} from 'vue'
 import { useRouter } from 'vue-router'
-import {API_URL_BASE} from "@/conf/conf.js";
 
 const router = useRouter()
 const isAuthenticated = ref(!!localStorage.getItem('authToken'))
@@ -15,7 +14,7 @@ const logout = () => {
 }
 
 const getPublicSequence = () => {
-  fetch(API_URL_BASE+'sequences')
+  fetch('http://docketu.iutnc.univ-lorraine.fr:40000/sequences')
       .then(res => res.json())
       .then(sequences => {
         for (let sequence of sequences.sequences) {
@@ -116,8 +115,6 @@ p{
 
 ul{
   list-style: none;
-  margin: 0;
-  padding: 0;
 }
 
 .best{
@@ -148,7 +145,6 @@ ul{
   border: 3px solid black;
   color: rgb(253, 235, 220);
   border-radius: 20px;
-  background-color: #e87619;
 }
 
 .connected{
@@ -163,7 +159,7 @@ ul{
   border: 3px solid black;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
-  background-color: rgba(142, 142, 142);
+  background-color: rgba(142, 142, 142, 0.5);
   margin-top: 3%;
 }
 
@@ -226,7 +222,11 @@ ul{
 }
 
 @media screen and ((min-width: 0em) and (max-width: 70em)) {
-
+  .best{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
   .score{
     margin-top: 3%;
   }

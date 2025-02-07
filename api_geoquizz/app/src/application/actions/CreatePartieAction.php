@@ -39,7 +39,6 @@ class CreatePartieAction extends AbstractAction
             try {
                 $data2 = $this->jwtManager->decodeToken($token);
             } catch (\Exception $e) {
-
             }
         }
 
@@ -55,7 +54,7 @@ class CreatePartieAction extends AbstractAction
                     'fields' => '*'
                 ]
             ];
-            $response = $this->directus_client->request('GET', '/items/Photo', $params);
+            $response = $this->directus_client->request('GET', '/items/photo', $params);
             $array = json_decode($response->getBody(), true);
             $interVale = array_map(function ($item) {
                 return $item['id'];
@@ -80,7 +79,7 @@ class CreatePartieAction extends AbstractAction
                 throw new \Exception("Le tableau n'a pas suffisamment d'éléments.");
             }
         } catch (GuzzleException $e) {
-            throw new \Exception($e->getMessage());
+            throw new \Exception('Create '.$e->getMessage());
         }
 
         $name = $data['nom'];

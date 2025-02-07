@@ -5,43 +5,37 @@ import 'leaflet/dist/leaflet.css';
 import router from "@/router/index.js";
 import {useRoute} from "vue-router";
 import { usePhotosStore } from "@/stores/photos.js";
-import {API_URL_BASE} from "@/conf/conf.js";
 
 const route = useRoute()
-const sequence = ref([]);
+let sequence = [];
 
 
 const photosStore = usePhotosStore();
-const photo = computed (() => photosStore.photos)
+const photos = photosStore.getPhotos;
+let predefinedLocation = [];
+let imageUrls = [];
+let currentImageIndex = 0;
+let imageURL = ref([]);
+let points = 0;
 const getPhotos = () => {
-  fetch(`${API_URL_BASE}parties/${route.params.id}`,{
+  fetch(`http://docketu.iutnc.univ-lorraine.fr:40000/parties/${route.params.id}`,{
     method: 'GET',
   }).then(response => response.json())
    .then(data => {
-       sequence.value = data.partie.sequence;
+      sequence = data.partie.sequence.sequence;
+      sequence = sequence.split('[')[1];
+      sequence = sequence.split(']')[0];
+      sequence = sequence.split(',').map(Number);
+      for (let i = 0; i < sequence.length; i++) {
+        predefinedLocation.push({lat: photos[sequence[i]-1].lat, lng: photos[sequence[i]-1].long});
+        imageUrls.push(photos[sequence[i]-1].image);
+      }
+      imageURL = ref(imageUrls[currentImageIndex]);
    })
     .catch(error => console.error('Error:', error));
-
 }
-const predefinedLocation = photo.value
-console.log('GG: '.predefinedLocation)
-// Import the image to display
-const imageUrls = [
-  new URL('@/assets/uploads/0f009026-273a-45eb-8426-12f51e4e15ae.jpg', import.meta.url).href,
-  new URL('@/assets/uploads/4c60f9e8-58cc-440d-ab8c-006940c75a26.jpg', import.meta.url).href,
-  new URL('@/assets/uploads/6b40350c-e9a9-493f-84cb-f0e75fe51fe7.jpg', import.meta.url).href,
-  new URL('@/assets/uploads/9c17d5bc-b714-42c8-ba55-d8955edb6251.jpg', import.meta.url).href,
-  new URL('@/assets/uploads/51f75935-a14e-405c-a9c9-889eca48b5ac.jpg', import.meta.url).href,
-  new URL('@/assets/uploads/3280bee1-5b75-477d-8408-8cff0f1cab50.jpg', import.meta.url).href,
-  new URL('@/assets/uploads/07366ca4-feb8-478e-a098-8007af6a9753.jpg', import.meta.url).href,
-  new URL('@/assets/uploads/2543587d-5198-482c-98a8-3fa89ac626cf.jpg', import.meta.url).href,
-  new URL('@/assets/uploads/b931c2ca-4c4f-4250-970f-9a860e00b4bc.jpg', import.meta.url).href,
-  new URL('@/assets/uploads/ca6a2d0c-9649-4b61-9dc8-da0bd8643a10.jpeg', import.meta.url).href,
-];
 
-const currentImageIndex = ref(0);
 let numImages = 0;
-const imageURL = ref(imageUrls[currentImageIndex.value]);
 const timeLeft = ref(20);
 let timerInterval = null;
 const score = ref(0);
@@ -56,18 +50,19 @@ const handleClick = (e) => {
   }
 
   currentMarker = L.marker([lat, lng]).addTo(map).openPopup();
-  score.value += Math.round(calculateDistance(lat, lng, predefinedLocation[currentImageIndex.value].lat, predefinedLocation[currentImageIndex.value].lng));
+  points = Math.round(calculateDistance(lat, lng, predefinedLocation[currentImageIndex].lat, predefinedLocation[currentImageIndex].lng));
+  score.value += points;
 };
-
+computed(() => {
+  imageURL.value = imageUrls[currentImageIndex];
+});
 onMounted(() => {
     getPhotos();
-    imageURL.value = imageUrls[currentImageIndex.value];
     map = L.map('map').setView([48.68935, 6.18281], 12);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(map);
 
     map.on('click', handleClick);
     startTimer();
-
 });
 
 function startTimer() {
@@ -97,10 +92,23 @@ function changeImage() {
   // Change the image and reset the timer
   if(numImages === imageUrls.length){
     timeLeft.value = 0;
+    fetch('http://docketu.iutnc.univ-lorraine.fr:40000/parties/update', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('tokenPartie')}`,
+        'Acces-Control-Allow-Origin': '*'
+        },
+      body: JSON.stringify({
+        id: route.params.id,
+        score: score.value
+      })
+    }).then(router.push('/'))
+      .catch(error => console.error('Error:', error));
     router.push('/');
   }
-  currentImageIndex.value = (currentImageIndex.value + 1) % imageUrls.length;
-  imageURL.value = imageUrls[currentImageIndex.value];
+  currentImageIndex = (currentImageIndex + 1) % imageUrls.length;
+  imageURL.value = imageUrls[currentImageIndex];
   map.setView([48.68935, 6.18281], 12)
   timeLeft.value = 20;
 
@@ -128,8 +136,8 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
 }
 
 function showExactPoint() {
-  const location = predefinedLocation[currentImageIndex.value];
-  map.setView([location.lat, location.lon], 15);
+  const location = predefinedLocation[currentImageIndex];
+  map.setView([location.lat, location.lng], 15);
   L.marker([location.lat, location.lng]).addTo(map).bindPopup('Exact Point').openPopup();
 }
 </script>
@@ -141,8 +149,13 @@ function showExactPoint() {
   </div>
   <div id="map" class="map-container"></div>
   <button @click="handleGuess" class="guess-button">Guess</button>
-  <div v-if="timeLeft === 0"  class="score-display">Score: {{ score }}
-    <button @click="changeImage" class="next-image-button">Next Image</button>
+  <div v-if="timeLeft === 0"  class="score-display">
+    <p>{{ currentImageIndex +1 }} / {{ imageUrls.length }}</p>
+    <p>Score: {{ score }}</p>
+    <p>Points: {{ points }}</p>
+    <button @click="changeImage" class="next-image-button">
+      {{ currentImageIndex + 1 < imageUrls.length ? 'Next Image' : 'Home' }}
+    </button>
   </div>
   <div class="timer">
     <div class="progress-bar" :style="{ width: (timeLeft / 20) * 100 + '%' }"></div>

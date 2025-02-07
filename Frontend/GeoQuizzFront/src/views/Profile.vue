@@ -1,7 +1,6 @@
 <script setup>
 import {onMounted, ref} from 'vue'
 import { useRouter } from 'vue-router'
-import {API_URL_BASE} from "@/conf/conf.js";
 
 const router = useRouter()
 let pseudo = ref(localStorage.getItem('pseudo') || '')
@@ -15,14 +14,12 @@ const changePseudo = () => {
     pseudo.value = newPseudo
   }
 }
-
 const logout = () => {
   localStorage.removeItem('authToken')
   isAuthenticated.value = false
   alert('Déconnexion réussie. À bientôt !')
   router.push('/Authentification')
 }
-
 const backToHome = () => {
   router.push('/')
 }
@@ -32,7 +29,7 @@ const viewStats = () => {
 
 const historique = () => {
   const token = localStorage.getItem('authToken');
-  fetch(API_URL_BASE+'profil', {
+  fetch('http://docketu.iutnc.univ-lorraine.fr:40000/profil', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -41,6 +38,7 @@ const historique = () => {
   }).then(response => response.json())
    .then(data => {
       gameHistory.value = data.parties
+      pseudo = data.pseudo
       id = data.id
     })
 }

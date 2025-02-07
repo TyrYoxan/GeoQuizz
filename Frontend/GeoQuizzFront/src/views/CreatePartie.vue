@@ -2,12 +2,11 @@
 import {onMounted, ref} from "vue";
 import router from "@/router/index.js";
 import { usePhotosStore} from "@/stores/photos.js";
-import { API_URL_BASE } from '@/conf/conf.js';
 
 let themes = ref([])
 let selectedTheme = ref(null)
 const getTheme = () => {
-  fetch(API_URL_BASE+'sequences/themes',
+  fetch('http://docketu.iutnc.univ-lorraine.fr:40000/sequences/themes',
       {
         method: 'GET',
         headers: {
@@ -22,7 +21,7 @@ const getTheme = () => {
 
 const storePhoto = usePhotosStore()
 const createPartie = () => {
-      fetch(API_URL_BASE+'parties/create', {
+      fetch('http://docketu.iutnc.univ-lorraine.fr:40000/parties/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -39,7 +38,7 @@ const createPartie = () => {
       })
       .then((data) => {
         localStorage.setItem('tokenPartie', data.token);
-        storePhoto.setPhotos(data.photo)
+        storePhoto.setPhotos(data.photo.data)
         router.push({name: 'partie', params: { id: data.id }});
       })
       .catch((error) => {

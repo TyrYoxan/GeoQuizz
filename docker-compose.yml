@@ -18,6 +18,7 @@ services:
     build:
       context: build
       dockerfile: 8.3-cli.Dockerfile
+    restart: always
     ports:
       - '40003:80'
     volumes:
@@ -31,6 +32,7 @@ services:
 
   auth.db:
     image: 'postgres:latest'
+    restart: always
     env_file: ./authdb.env
     ports:
       - '40004:5432'
@@ -47,17 +49,25 @@ services:
     build:
       context: build
       dockerfile: 8.3-cli.Dockerfile
+    restart: always
     ports:
       - '40001:80'
     working_dir: /var/php
     volumes:
       - ./api_geoquizz/app/:/var/php/
+    environment:
+      AMQP_HOST: rabbitmq
+      AMQP_PORT: 5672
+      AMQP_USER: admin
+      AMQP_PASSWORD: admin
+      NOTIFY_EXCHANGE: partie
     networks:
       - geoquizz
     command: php -S 0.0.0.0:80 -t /var/php/public
 
   db_geoquizz:
     image: 'postgres:latest'
+    restart: always
     env_file: ./env/db.env
     ports:
       - '40002:5432'
@@ -69,6 +79,7 @@ services:
 
   frontend:
     image: node:22
+    restart: always
     ports:
       - '40008:5173'
     working_dir: /app
@@ -88,6 +99,7 @@ services:
     build:
       context: build
       dockerfile: 8.3-cli.Dockerfile
+    restart: always
     ports:
       - '40000:80'
     volumes:
@@ -103,6 +115,7 @@ services:
   # Replace "postgis/postgis:13-master" with your desired PostGIS version and platform.
   database:
     image: 'postgres:latest'
+    restart: always
     # Required when running on platform other than amd64, like Apple M1/M2:
     #platform: linux/amd64
     volumes:
@@ -124,6 +137,9 @@ services:
 
   cache:
     image: redis:6
+    restart: always
+    networks:
+      - geoquizz
     healthcheck:
       test: [ "CMD-SHELL", "[ $$(redis-cli ping) = 'PONG' ]" ]
       interval: 10s
@@ -131,10 +147,11 @@ services:
       retries: 5
       start_interval: 5s
       start_period: 30s
-    networks:
-      - geoquizz
+
+
   directus:
     image: directus/directus:11.1.1
+    restart: always
     ports:
       - '40009:8055'
     volumes:
@@ -157,7 +174,7 @@ services:
       DB_PASSWORD: "directus"
 
       CACHE_ENABLED: "true"
-      CACHE_AUTO_PURGE: "false"
+      CACHE_AUTO_PURGE: "true"
       CACHE_STORE: "redis"
       REDIS: "redis://cache:6379"
 
@@ -173,18 +190,21 @@ services:
 
     # Environment variables can also be defined in a file (for example `.env`):
     # env_file:
-    #	  - .env
+    	# - .env
 
   adminer:
     image: adminer
+    restart: always
     ports:
     - '40010:8080'
     networks:
       - geoquizz
+    command: 'php -S 0.0.0.0:8080 -t /var/www/html'
 
-  # ===================MESSAGE BROKER================
+    # ===================MESSAGE BROKER================
   rabbitmq:
     image: rabbitmq:4-management
+    restart: always
     ports:
       - '40005:15672'
       - '40006:5672'
@@ -201,6 +221,7 @@ services:
 
   mailcatcher:
     image: dockage/mailcatcher:latest
+    restart: always
     ports:
       - "40007:1080"
 
@@ -208,6 +229,7 @@ services:
     build:
       context: build
       dockerfile: 8.3-cli.Dockerfile
+    restart: always
     volumes:
       - ./api_mail:/var/php/
     working_dir: /var/php

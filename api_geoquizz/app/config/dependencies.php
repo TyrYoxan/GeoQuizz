@@ -28,7 +28,6 @@ return [
     'client.directus' => function(ContainerInterface $c){
         return new GuzzleHttp\Client([
             'base_uri' => 'http://directus:8055',
-            'timeout' => 2.0,
         ]);
     },
 

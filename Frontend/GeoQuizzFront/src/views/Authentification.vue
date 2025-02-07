@@ -2,7 +2,6 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
-import { API_URL_BASE } from '@/conf/conf.js';
 
 const router = useRouter()
 const connexion = ref(false)
@@ -15,7 +14,7 @@ const isLoading = ref(false)
 const signin = async () => {
   isLoading.value = true
   try {
-    const response = await fetch(API_URL_BASE+'signin', {
+    const response = await fetch('http://docketu.iutnc.univ-lorraine.fr:40000/signin', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -34,6 +33,7 @@ const signin = async () => {
     localStorage.setItem('authToken', accessToken)
     router.push('/home')
   } catch (error) {
+    alert('Erreur lors de la connexion : mot de passe ou email incorrect');
   } finally {
     isLoading.value = false
   }
@@ -42,12 +42,13 @@ const signin = async () => {
 // Fonction pour s'inscrire
 const signup = async () => {
   if (password.value !== passwordConfirm.value) {
+    alert('Les mots de passe ne correspondent pas !')
     return
   }
 
   isLoading.value = true
   try {
-    const response = await fetch(API_URL_BASE+'signup', {
+    const response = await fetch('http://docketu.iutnc.univ-lorraine.fr:40000/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -62,6 +63,8 @@ const signup = async () => {
     }
     connexion.value = false
   } catch (error) {
+    console.log(error);
+    alert('Erreur lors de l’inscription : utilisateur déjà existant ')
   } finally {
     isLoading.value = false
   }

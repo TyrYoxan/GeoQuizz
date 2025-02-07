@@ -2,7 +2,6 @@
 
 namespace api_geoquizz\infrastructure\adapters;
 
-
 use api_geoquizz\application\interfaces\messages\MessageSenderInterface;
 use api_geoquizz\core\dto\DTOPartie;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
