@@ -11,7 +11,7 @@ const getPhotos = () => {
     method: 'GET',
   }).then(response => response.json())
    .then(data => {
-
+        console.log(data)
    })
 }
 const predefinedLocation = [

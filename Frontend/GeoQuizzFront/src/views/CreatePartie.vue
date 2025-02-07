@@ -19,22 +19,30 @@ const getTheme = () => {
 }
 
 const createPartie = () => {
-  fetch('http://localhost:40000/parties/create',
-      {
+      fetch('http://localhost:40000/parties/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          nom: selectedTheme.value
-        })
+          nom: selectedTheme.value,
+        }),
       })
-   .then(response => console.log(response))
-   .then(() => localStorage.setItem('tokenPartie',response.token))
-   .then(() =>router.push(`/parties/${response.id}`))
-
-   .catch(error => console.error('Error:', error));
-}
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log('Success:', data);
+        localStorage.setItem('tokenPartie', data.token);
+        router.push({name: 'partie', params: { id: data.id }});
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+};
 
 onMounted(getTheme)
 

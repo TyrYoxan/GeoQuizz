@@ -31,7 +31,6 @@ class CreatePartieAction extends AbstractAction
         $data = $body;
 
 
-
         $token = $rq->getHeader('Authorization');
         $data2 = null;
 

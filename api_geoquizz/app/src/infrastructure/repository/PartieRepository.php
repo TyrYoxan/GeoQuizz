@@ -2,11 +2,13 @@
 
 namespace api_geoquizz\infrastructure\repository;
 
+use api_auth\core\repositoryInterfaces\RepositoryEntityNotFoundException;
 use api_geoquizz\core\domain\entities\sequence\Sequence;
 use api_geoquizz\core\dto\InputPartieDTO;
 use api_geoquizz\core\repositoryInterfaces\RepositoryPartieInterface;
 use api_geoquizz\core\domain\entities\partie\Partie;
 use PDO;
+use PDOException;
 
 class PartieRepository implements RepositoryPartieInterface
 {
@@ -34,16 +36,22 @@ class PartieRepository implements RepositoryPartieInterface
         return new Partie($sequence, $row['score']);
     }
 
-    public function createPartie(InputPartieDTO $partie, String $id_user=null): String
+    public function createPartie(InputPartieDTO $partie, String $id_user = null): String
     {
-        $rq = $this->db->prepare("INSERT INTO parties
-                             (sequence_photo, id_user, score) VALUES (:sequence_photo,:id_user, :score)");
+        try {
+            $rq = $this->db->prepare("INSERT INTO parties
+                             (sequence_photo, id_user, score) VALUES (:sequence_photo, :id_user, :score) RETURNING id_partie");
 
-        $rq->bindValue(':sequence_photo', $partie->sequence_photo->sequence, PDO::PARAM_STR);
-        $rq->bindValue(':id_user', $id_user, PDO::PARAM_STR);
-        $rq->bindValue(':score', $partie->score, PDO::PARAM_INT);
-        $rq->execute();
-        return $rq->fetchColumn();
+            $rq->bindValue(':sequence_photo', $partie->sequence_photo, PDO::PARAM_STR);
+            $rq->bindValue(':id_user', $id_user ?? null, PDO::PARAM_STR);
+            $rq->bindValue(':score', $partie->score, PDO::PARAM_INT);
+            $rq->execute();
+
+            return $rq->fetchColumn();
+        }catch (PDOException $e) {
+            throw new RepositoryEntityNotFoundException($e->getMessage());
+        }
+
     }
 
     public function updatePartie($partie): void

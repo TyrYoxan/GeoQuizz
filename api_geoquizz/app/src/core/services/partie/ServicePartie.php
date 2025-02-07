@@ -24,6 +24,7 @@ class ServicePartie implements ServicePartieInterface
 
     public function createPartie(InputPartieDTO $partie): String
     {
+
         $test = $this->repositoryPartie->createPartie($partie);
         return $test;
     }
