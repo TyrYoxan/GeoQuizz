@@ -48,7 +48,7 @@ class CreatePartieAction extends AbstractAction
         try {
             $params = [
                 'query' => [
-                    'fields' => 'id'
+                    'fields' => '*'
                 ]
             ];
             $response = $this->directus_client->request('GET', '/items/Photo', $params);
@@ -82,6 +82,7 @@ class CreatePartieAction extends AbstractAction
         $name = $data['nom'];
         $idSequence = $this->servicePartie->createSequence($sequence, $name);
         $data['sequence_photo'] = $idSequence;
+        $data['photo'] = $array;
         $data['score'] = 0;
 
         $partieInputDto = new InputPartieDTO($data);
@@ -93,7 +94,6 @@ class CreatePartieAction extends AbstractAction
         }
 
         $data['id'] = $this->servicePartie->createPartie($partieInputDto);
-
 
         return JsonRenderer::render($rs, 201, $data);
     }

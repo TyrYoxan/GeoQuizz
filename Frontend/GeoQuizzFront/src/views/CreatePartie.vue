@@ -1,6 +1,7 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import router from "@/router/index.js";
+import { usePhotosStore} from "@/stores/photos.js";
 
 let themes = ref([])
 let selectedTheme = ref(null)
@@ -18,6 +19,7 @@ const getTheme = () => {
     });
 }
 
+const storePhoto = usePhotosStore()
 const createPartie = () => {
       fetch('http://localhost:40000/parties/create', {
         method: 'POST',
@@ -35,8 +37,8 @@ const createPartie = () => {
         return response.json();
       })
       .then((data) => {
-        console.log('Success:', data);
         localStorage.setItem('tokenPartie', data.token);
+        storePhoto.setPhotos(data.photo)
         router.push({name: 'partie', params: { id: data.id }});
       })
       .catch((error) => {

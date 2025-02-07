@@ -1,18 +1,27 @@
 <script setup>
-import {onMounted, ref} from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useRouter } from 'vue-router';
 import router from "@/router/index.js";
-//Predefined location
+import {useRoute} from "vue-router";
+import { usePhotosStore } from "@/stores/photos.js";
 
+const route = useRoute()
+const sequence = ref([]);
+
+
+const photosStore = usePhotosStore();
+const photo = computed (() => photosStore.photos)
 const getPhotos = () => {
-  fetch(`http://localhost:40000/parties/{{router.params.id}}`,{
+  fetch(`http://localhost:40000/parties/${route.params.id}`,{
     method: 'GET',
   }).then(response => response.json())
    .then(data => {
-        console.log(data)
+       sequence.value = data.partie.sequence;
+       console.log(photo.value);
    })
+    .catch(error => console.error('Error:', error));
+
 }
 const predefinedLocation = [
   { lat: 48.698889, lng: 6.177778 }, // Porte de la Craffe
@@ -40,6 +49,7 @@ const imageUrls = [
   new URL('@/assets/uploads/b931c2ca-4c4f-4250-970f-9a860e00b4bc.jpg', import.meta.url).href,
   new URL('@/assets/uploads/ca6a2d0c-9649-4b61-9dc8-da0bd8643a10.jpeg', import.meta.url).href,
 ];
+
 const currentImageIndex = ref(0);
 let numImages = 0;
 const imageURL = ref(imageUrls[currentImageIndex.value]);
@@ -61,11 +71,14 @@ const handleClick = (e) => {
 };
 
 onMounted(() => {
-  map = L.map('map').setView([48.68935, 6.18281], 12);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(map);
+    getPhotos();
+    imageURL.value = imageUrls[currentImageIndex.value];
+    map = L.map('map').setView([48.68935, 6.18281], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(map);
 
-  map.on('click', handleClick);
-  startTimer();
+    map.on('click', handleClick);
+    startTimer();
+
 });
 
 function startTimer() {
