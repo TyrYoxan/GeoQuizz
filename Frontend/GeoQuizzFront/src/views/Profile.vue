@@ -6,6 +6,7 @@ import {API_URL_BASE} from "@/conf/conf.js";
 const router = useRouter()
 let pseudo = ref(localStorage.getItem('pseudo') || '')
 const gameHistory = ref([])
+const isAuthenticated = ref(!!localStorage.getItem('authToken'))
 let id = ref([])
 const changePseudo = () => {
   const newPseudo = prompt('Entrez votre nouveau pseudo')
@@ -14,6 +15,14 @@ const changePseudo = () => {
     pseudo.value = newPseudo
   }
 }
+
+const logout = () => {
+  localStorage.removeItem('authToken')
+  isAuthenticated.value = false
+  alert('Déconnexion réussie. À bientôt !')
+  router.push('/Authentification')
+}
+
 const backToHome = () => {
   router.push('/')
 }
@@ -21,8 +30,8 @@ const viewStats = () => {
   router.push('/stats')
 }
 
-const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJhcGkuZ2VvcXVpenouZnIiLCJhdWQiOiJhcGkuZ2VvcXVpenouZnIiLCJpYXQiOjE3Mzg4OTI5NjIsImV4cCI6MTczODg5OTAyMiwic3ViIjoiMGQxZDBlYjYtMjYxMS00MTk2LWIxMDktMjQ4ZDRhNDE5OWEzIiwiZGF0YSI6eyJpZCI6IjBkMWQwZWI2LTI2MTEtNDE5Ni1iMTA5LTI0OGQ0YTQxOTlhMyIsImVtYWlsIjoiY2xlbUBnbWFpbC5jb20iLCJwc2V1ZG8iOiJCZXR0ZXIgQnV0dGVyZmx5Iiwicm9sZSI6MX19.B-_trbPrx_8S5o-6vr-0-zXRVezpUkn4J7ulzfBbaGJIs5f6BolBpV3FZfqHmVFHgJ9GbdpG8NufzD4oEESOeQ'
 const historique = () => {
+  const token = localStorage.getItem('authToken');
   fetch(API_URL_BASE+'profil', {
     method: 'GET',
     headers: {
@@ -42,16 +51,29 @@ onMounted(historique)
 </script>
 
 <template>
-<!-- Ajout du profile changement de pseudo et affichage historique partie -->
   <header>
-    <h1>Bienvenue {{ pseudo }}</h1>
-    <button @click="backToHome">Retour à l'accueil</button>
-    <button @click="viewStats">Voir les statistiques</button>
-    <button @click="changePseudo">Changer de pseudo</button>
-    <div v-if="gameHistory.length > 0">
-      <h2>Historique des parties</h2>
+    <nav class="navbar">
       <ul>
-        <li v-for="game in gameHistory">
+        <li @click="logout" class="btn btn-primary">
+          <img class="icon" src="../assets/porte.png" alt="logout" />
+        </li>
+        <li @click="backToHome" class="btn btn-primary">
+          <img class="icon" src="../assets/home.png" alt="backToHome" />
+        </li>
+      </ul>
+    </nav>
+  </header>
+  <body>
+    <div class="container">
+      <h1>Bienvenue {{ pseudo }}</h1>
+      <div class="boutton">
+        <button @click="viewStats">Voir les statistiques</button>
+        <button @click="changePseudo">Changer de pseudo</button>
+      </div>
+      <div v-if="gameHistory.length > 0" class="game-history">
+        <h2>Historique des parties :</h2>
+        <ul>
+          <li v-for="game in gameHistory">
           <div>
             <div class="game-info">
               <h2>{{game.id}}</h2>
@@ -61,25 +83,62 @@ onMounted(historique)
               <button v-if="game.status === false" @click="viewGame(game.id)">Publique</button>
             </div>
           </div>
-        </li>
-      </ul>
+          </li>
+        </ul>
+      </div>
     </div>
-  </header>
+  </body>
 </template>
 
 <style scoped>
-header {
+body {
   font-family: Arial, sans-serif;
-  color: orange;
+  color: #e87619;
   background-color: white;
   margin: 0;
   padding: 0;
+  align-items: center;
+  justify-content: center;
+  background-image: url("../assets/nuit.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 .game-info {
   background-color: white;
-  padding: 10px;
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
+  border: 2px solid #ccc;
+  margin-bottom: 5%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0%;
+  padding: 2%;
+}
+
+.navbar {
+  background-color: #e87619;
+  overflow: hidden;
+}
+
+.icon {
+  width: 2%;
+  height: 2%;
+  float: right;
+  margin-right: 2%;
+  transition: background-color 0.3s ease;
+  cursor: pointer;  
+}
+
+ul{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.boutton{
+  display: flex;
+  flex-direction: row;
 }
 
 button {
@@ -88,7 +147,7 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 20%;
+  width: 40%;
   height: 10%;
   border-radius: 10px;
   color: white;
@@ -106,4 +165,30 @@ button {
 button:hover {
   background-color: #e26701;
 }
+
+.game-history>h2 {
+  margin-top: 15%;
+}
+
+h1{
+  font-size: 5.5em;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  border: 3px solid black;
+  border-radius: 20px;
+  width: 80%;
+  background-color: white;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-history>h2{
+  background-color: white;
+  border: 2px solid black;
+}
+
 </style>

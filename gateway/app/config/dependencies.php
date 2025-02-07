@@ -11,19 +11,16 @@ return [
     "client.auth" => function (ContainerInterface $c) {
         return new GuzzleHttp\Client([
             'base_uri' => 'http://api_auth:80',
-            'timeout' => 2.0
         ]);
     },
     "client.geoquizz" => function (ContainerInterface $c) {
         return new GuzzleHttp\Client([
             'base_uri' => 'http://api_geoquizz:80',
-            'timeout' => 2.0
         ]);
     },
     "client.directus" => function (ContainerInterface $c) {
         return new GuzzleHttp\Client([
             'base_uri' => 'http://directus:8055',
-            'timeout' => 2.0
         ]);
     },
 

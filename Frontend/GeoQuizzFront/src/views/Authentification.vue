@@ -29,14 +29,13 @@ const signin = async () => {
     if (!response.ok) {
       throw new Error('Erreur lors de la connexion')
     }
-    alert('Connexion réussie !');
     // Sauvegarde du token dans localStorage
-    const accessToken = response.headers.access_token
+    const accessToken = response.headers.get('access-token');
+    console.log(accessToken);
     localStorage.setItem('authToken', accessToken)
-
+    alert('Connexion réussie !');
     router.push('/home')
   } catch (error) {
-    alert('Erreur lors de la connexion : mot de passe ou email incorrect');
   } finally {
     isLoading.value = false
   }
