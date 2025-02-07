@@ -31,9 +31,7 @@ const signin = async () => {
     }
     // Sauvegarde du token dans localStorage
     const accessToken = response.headers.get('access-token');
-    console.log(accessToken);
     localStorage.setItem('authToken', accessToken)
-    alert('Connexion réussie !');
     router.push('/home')
   } catch (error) {
   } finally {
@@ -44,7 +42,6 @@ const signin = async () => {
 // Fonction pour s'inscrire
 const signup = async () => {
   if (password.value !== passwordConfirm.value) {
-    alert('Les mots de passe ne correspondent pas !')
     return
   }
 
@@ -63,11 +60,8 @@ const signup = async () => {
     if (!response.ok) {
       throw new Error('Erreur lors de l’inscription')
     }
-    alert('Inscription réussie ! Vous pouvez maintenant vous connecter.')
     connexion.value = false
   } catch (error) {
-    console.log(error);
-    alert('Erreur lors de l’inscription : utilisateur déjà existant ')
   } finally {
     isLoading.value = false
   }
