@@ -1,6 +1,7 @@
 <script setup>
 import {onMounted, ref} from 'vue'
 import { useRouter } from 'vue-router'
+import {API_URL_BASE} from "@/conf/conf.js";
 
 const router = useRouter()
 const isAuthenticated = ref(!!localStorage.getItem('authToken'))
@@ -14,7 +15,7 @@ const logout = () => {
 }
 
 const getPublicSequence = () => {
-  fetch('http://localhost:40000/sequences')
+  fetch(API_URL_BASE+'sequences')
       .then(res => res.json())
       .then(sequences => {
         console.log(sequences)

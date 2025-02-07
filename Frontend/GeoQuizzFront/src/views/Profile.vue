@@ -1,6 +1,7 @@
 <script setup>
 import {onMounted, ref} from 'vue'
 import { useRouter } from 'vue-router'
+import {API_URL_BASE} from "@/conf/conf.js";
 
 const router = useRouter()
 let pseudo = ref(localStorage.getItem('pseudo') || '')
@@ -22,7 +23,7 @@ const viewStats = () => {
 
 const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJhcGkuZ2VvcXVpenouZnIiLCJhdWQiOiJhcGkuZ2VvcXVpenouZnIiLCJpYXQiOjE3Mzg4OTI5NjIsImV4cCI6MTczODg5OTAyMiwic3ViIjoiMGQxZDBlYjYtMjYxMS00MTk2LWIxMDktMjQ4ZDRhNDE5OWEzIiwiZGF0YSI6eyJpZCI6IjBkMWQwZWI2LTI2MTEtNDE5Ni1iMTA5LTI0OGQ0YTQxOTlhMyIsImVtYWlsIjoiY2xlbUBnbWFpbC5jb20iLCJwc2V1ZG8iOiJCZXR0ZXIgQnV0dGVyZmx5Iiwicm9sZSI6MX19.B-_trbPrx_8S5o-6vr-0-zXRVezpUkn4J7ulzfBbaGJIs5f6BolBpV3FZfqHmVFHgJ9GbdpG8NufzD4oEESOeQ'
 const historique = () => {
-  fetch('http://localhost:40000/profil', {
+  fetch(API_URL_BASE+'profil', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -67,10 +68,42 @@ onMounted(historique)
 </template>
 
 <style scoped>
+header {
+  font-family: Arial, sans-serif;
+  color: orange;
+  background-color: white;
+  margin: 0;
+  padding: 0;
+}
 .game-info {
-  background-color: #f0f0f0;
+  background-color: white;
   padding: 10px;
   border: 1px solid #ccc;
   margin-bottom: 10px;
+}
+
+button {
+  background-color: #e87619;
+  opacity: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  height: 10%;
+  border-radius: 10px;
+  color: white;
+  font-size: 1.2em;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+  margin: auto;
+  margin-top: 2%;
+
+
+}
+
+button:hover {
+  background-color: #e26701;
 }
 </style>

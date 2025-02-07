@@ -2,11 +2,12 @@
 import {onMounted, ref} from "vue";
 import router from "@/router/index.js";
 import { usePhotosStore} from "@/stores/photos.js";
+import { API_URL_BASE } from '@/conf/conf.js';
 
 let themes = ref([])
 let selectedTheme = ref(null)
 const getTheme = () => {
-  fetch('http://localhost:40000/sequences/themes',
+  fetch(API_URL_BASE+'sequences/themes',
       {
         method: 'GET',
         headers: {
@@ -21,7 +22,7 @@ const getTheme = () => {
 
 const storePhoto = usePhotosStore()
 const createPartie = () => {
-      fetch('http://localhost:40000/parties/create', {
+      fetch(API_URL_BASE+'parties/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

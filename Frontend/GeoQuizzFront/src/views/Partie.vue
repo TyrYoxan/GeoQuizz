@@ -5,6 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import router from "@/router/index.js";
 import {useRoute} from "vue-router";
 import { usePhotosStore } from "@/stores/photos.js";
+import {API_URL_BASE} from "@/conf/conf.js";
 
 const route = useRoute()
 const sequence = ref([]);
@@ -13,7 +14,7 @@ const sequence = ref([]);
 const photosStore = usePhotosStore();
 const photo = computed (() => photosStore.photos)
 const getPhotos = () => {
-  fetch(`http://localhost:40000/parties/${route.params.id}`,{
+  fetch(`${API_URL_BASE}parties/${route.params.id}`,{
     method: 'GET',
   }).then(response => response.json())
    .then(data => {

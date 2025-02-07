@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
+import { API_URL_BASE } from '@/conf/conf.js';
 
 const router = useRouter()
 const connexion = ref(false)
@@ -14,7 +15,7 @@ const isLoading = ref(false)
 const signin = async () => {
   isLoading.value = true
   try {
-    const response = await fetch('http://localhost:40000/signin', {
+    const response = await fetch(API_URL_BASE+'signin', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -50,7 +51,7 @@ const signup = async () => {
 
   isLoading.value = true
   try {
-    const response = await fetch('http://localhost:40000/signup', {
+    const response = await fetch(API_URL_BASE+'signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
