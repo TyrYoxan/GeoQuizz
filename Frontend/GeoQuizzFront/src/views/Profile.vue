@@ -40,9 +40,7 @@ const historique = () => {
     }
   }).then(response => response.json())
    .then(data => {
-     console.log(data)
       gameHistory.value = data.parties
-      pseudo = data.pseudo
       id = data.id
     })
 }
