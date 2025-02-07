@@ -1,13 +1,15 @@
 <?php
 
-namespace appi_geoquizz\infrastructure\adapters;
+namespace api_geoquizz\infrastructure\adapters;
 
 
+use api_geoquizz\application\interfaces\messages\MessageSenderInterface;
+use api_geoquizz\core\dto\DTOPartie;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
 
-class RabbitMQRdvMessageSender implements RdvMessageSenderInterface
+class RabbitMQRdvMessageSender implements MessageSenderInterface
 {
 
     private $connection;
@@ -21,9 +23,9 @@ class RabbitMQRdvMessageSender implements RdvMessageSenderInterface
         $this->exchange = $exchange;
     }
 
-    public function sendMessage(RDVDTO $rdv, string $event): void
+    public function sendMessage(DTOPartie $partie, string $event): void
     {
-        $msg = new AMQPMessage(json_encode(['event' => $event, 'rdv' => json_encode($rdv)]));
+        $msg = new AMQPMessage(json_encode(['event' => $event, 'partie' => json_encode($partie)]));
         $this->channel->basic_publish($msg, $this->exchange);
     }
 

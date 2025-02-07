@@ -32,14 +32,14 @@ return [
         ]);
     },
 
-//    'rdv_message_broker' => function(ContainerInterface $c){
-//        return new \PhpAmqpLib\Connection\AMQPStreamConnection(
-//            getenv('AMQP_HOST'),
-//            getenv('AMQP_PORT'),
-//            getenv('AMQP_USER'),
-//            getenv('AMQP_PASSWORD')
-//        );
-//    },
+    'message_broker' => function(ContainerInterface $c){
+        return new \PhpAmqpLib\Connection\AMQPStreamConnection(
+            getenv('AMQP_HOST'),
+            getenv('AMQP_PORT'),
+            getenv('AMQP_USER'),
+            getenv('AMQP_PASSWORD')
+        );
+    },
 
     JWTManager::class=> DI\autowire(JWTManager::class),
 
