@@ -24,4 +24,6 @@ Directus : http://docketu.iutnc.univ-lorraine.fr:40009/
 
 Gateway : http://docketu.iutnc.univ-lorraine.fr:40000/
 
+Adminer : http://docketu.iutnc.univ-lorraine.fr:40010/
+
 Mail : http://docketu.iutnc.univ-lorraine.fr:40007/
