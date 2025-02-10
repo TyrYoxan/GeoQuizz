@@ -5,7 +5,7 @@
 ## Tableau de bord
 | Tâche    | Clément | Vincent | Quentin | Félicien | Maxime |
 |----------|:-------:|:-------:|:-------:|:--------:|:------:|
-| FontEnd  |    x    |         |    x    |    x     |        |
+| FontEnd  |    x    |    x    |    x    |    x     |        |
 | Directus |    x    |    x    |         |          |        |
 | Auth     |         |         |    x    |          |        |
 | GeoQuizz |    x    |    x    |         |          |        |
